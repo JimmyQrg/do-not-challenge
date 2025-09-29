@@ -4,13 +4,46 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HOW TO PLAY - DO NOT CHALLENGE</title>
-<link rel="icon" href="https://JimmyQrg.github.io/do-not-challenge/main/icon.png">
+<link rel="icon" href="https://raw.githubusercontent.com/JimmyQrg/do-not-challenge/main/icon.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
 <style>
-body {margin:0; font-family:'Press Start 2P', sans-serif; background:#0f2027; color:white; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; min-height:100vh; padding:20px;}
-h1{font-size:2rem;color:#0ff;text-shadow:0 0 20px #0ff;margin-bottom:20px; text-align:center;}
-#content{max-width:900px; background:rgba(0,0,0,0.85); padding:20px; border-radius:15px; box-shadow:0 5px 30px rgba(0,255,255,0.5); white-space:pre-wrap; line-height:1.5; font-size:0.85rem;}
-#langContainer{position:fixed;top:20px;right:20px;display:flex;align-items:center;font-size:1rem;}
+body {
+  margin:0;
+  font-family:'Press Start 2P', sans-serif;
+  background:#0f2027;
+  color:white;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  min-height:100vh;
+  padding:20px;
+}
+h1{
+  font-size:2rem;
+  color:#0ff;
+  text-shadow:0 0 20px #0ff;
+  margin-bottom:20px;
+  text-align:center;
+}
+#content{
+  max-width:900px;
+  background:rgba(0,0,0,0.85);
+  padding:20px;
+  border-radius:15px;
+  box-shadow:0 5px 30px rgba(0,255,255,0.5);
+  white-space:pre-wrap;
+  line-height:1.5;
+  font-size:0.85rem;
+}
+#langContainer{
+  position:fixed;
+  top:20px;
+  right:20px;
+  display:flex;
+  align-items:center;
+  font-size:1rem;
+}
 #langContainer span{margin-right:8px;font-size:1.2rem;}
 select{font-size:1rem;padding:5px;border-radius:6px;}
 </style>
@@ -23,12 +56,16 @@ select{font-size:1rem;padding:5px;border-radius:6px;}
 </div>
 <div id="content"></div>
 
-<script src="https://cdn.jsdelivr.net/gh/JimmyQrg/do-not-challenge@main/cardInfo-howToPlay.js"></script>
+<!-- Load card information and HowToPlay article from GitHub raw URL -->
+<script src="https://raw.githubusercontent.com/JimmyQrg/do-not-challenge/main/cardInfo-howToPlay.js"></script>
 <script>
 // Get URL param for initial language
-function getQueryParam(name){const urlParams=new URLSearchParams(window.location.search);return urlParams.get(name);}
-let currentLang = getQueryParam('lang') || 'en';
+function getQueryParam(name){
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(name);
+}
 
+let currentLang = getQueryParam('lang') || 'en';
 const contentDiv = document.getElementById("content");
 const languageSelect = document.getElementById("languageSelect");
 
@@ -48,7 +85,7 @@ languageSelect.value = currentLang;
 
 // Update content
 function updateContent(){
-  if(cardHowToPlay && cardHowToPlay[currentLang]){
+  if(typeof cardHowToPlay !== 'undefined' && cardHowToPlay[currentLang]){
     contentDiv.textContent = cardHowToPlay[currentLang];
   } else {
     contentDiv.textContent = "No information available in this language.";
@@ -56,12 +93,12 @@ function updateContent(){
 }
 
 // Switch language dynamically
-languageSelect.addEventListener('change',()=>{
+languageSelect.addEventListener('change', ()=>{
   currentLang = languageSelect.value;
   updateContent();
 });
 
-// Initialize
+// Initialize content
 updateContent();
 </script>
 </body>
