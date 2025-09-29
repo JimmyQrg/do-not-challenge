@@ -56,7 +56,20 @@ langStart.addEventListener('change',()=>{currentLang=langStart.value;updateStart
 
 // --- Start / How / Replay ---
 startBtn.addEventListener('click',()=>{startMenu.style.display="none";setupGame();});
-howBtn.addEventListener('click',()=>{window.location.href='howtoplay.html?lang='+currentLang;});
+howBtn.addEventListener('click', ()=> {
+  const url = 'howtoplay.html?lang=' + currentLang;
+  // Try to open the HTML page in a new tab
+  try {
+    const win = window.open(url, '_blank');
+    // If the popup is blocked or failed
+    if (!win) {
+      throw new Error('Cannot open How to Play page');
+    }
+  } catch (e) {
+    // Fallback: alert the article content
+    alert(cardHowToPlay[currentLang]);
+  }
+});
 replayBtn.addEventListener('click',()=>{replayBtn.style.display='none';setupGame();});
 
 // --- Particle ---
