@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HOW TO PLAY - DO NOT CHALLENGE</title>
+<link rel="icon" type="image/png" href="icon.png">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+  body {
+    margin:0;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    font-family: 'Press Start 2P', cursive;
+    color: #fff;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding: 20px;
+  }
+  #languageSelector {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    cursor:pointer;
+  }
+  #languageSelector img { width:32px; height:32px; }
+  h1 { margin-bottom:20px; }
+  p { max-width: 800px; font-size:16px; line-height:1.5em; white-space:pre-wrap; }
+</style>
+</head>
+<body>
+
+<div id="languageSelector">
+  <img src="icon.png" alt="Globe">
+  <select id="languageSelect">
+    <option value="en">English</option>
+    <option value="zh">中文（简体）</option>
+    <option value="jp">日本語</option>
+  </select>
+</div>
+
+<h1 id="title">HOW TO PLAY</h1>
+<p id="instructions"></p>
+
+<script src="cardInfo-howToPlay.js"></script>
+<script>
+let currentLang = 'en';
+const languageSelect = document.getElementById('languageSelect');
+const instructions = document.getElementById('instructions');
+
+function updateInstructions(){
+  if(typeof howToPlay[currentLang]!=='undefined'){
+    instructions.textContent = howToPlay[currentLang];
+  } else {
+    instructions.textContent = 'No information available in this language.';
+  }
+}
+
+// Initial load
+updateInstructions();
+
+// Language change
+languageSelect.addEventListener('change',(e)=>{
+  currentLang = e.target.value;
+  updateInstructions();
+});
+</script>
+
+</body>
+</html>
