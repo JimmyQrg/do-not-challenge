@@ -7,6 +7,7 @@
 <link rel="icon" type="image/png" href="icon.png">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 body {
   margin:0;
   overflow:hidden;
@@ -44,8 +45,8 @@ button {
 button:hover {
   background:#0ff;
   color:#222;
-  transform:scale(1.05);
-  box-shadow:0 0 15px #0ff,0 0 25px #0ff inset;
+  transform:scale(1.1);
+  box-shadow:0 0 20px #0ff,0 0 50px #0ff inset;
 }
 
 /* Fancy selector */
@@ -63,6 +64,8 @@ select,input[type=number] {
 select:hover,input[type=number]:hover {
   background:#0ff;
   color:#222;
+  transform:scale(1.05);
+  box-shadow:0 0 15px #0ff;
 }
 
 /* Language selector */
@@ -73,26 +76,29 @@ select:hover,input[type=number]:hover {
   display:flex;
   align-items:center;
   gap:8px;
+  z-index:100;
 }
 #languageSelector img { width:32px;height:32px; cursor:pointer; }
 
 /* Player card */
 #playerCard {
   width:400px; height:200px; perspective:1000px; cursor:pointer;
+  position:relative;
 }
 .card-inner {
   width:100%; height:100%;
-  transition: transform 0.8s;
+  transition: transform 0.8s ease;
   transform-style: preserve-3d;
   position:relative;
 }
-.card-inner.flipped { transform: rotateY(180deg);}
+.card-inner.flipped { transform: rotateY(180deg); animation: glowPulse 1s infinite; }
 .card-front, .card-back {
   position:absolute; width:100%; height:100%;
   backface-visibility:hidden;
   display:flex; align-items:center; justify-content:center;
   border:3px solid #0ff; border-radius:12px;
   font-size:16px; text-align:center; padding:20px; box-sizing:border-box;
+  transition: all 0.3s ease;
 }
 .card-front { background:#333;}
 .card-back { background:#111; transform:rotateY(180deg); font-size:18px; }
@@ -113,11 +119,37 @@ select:hover,input[type=number]:hover {
   font-size:14px; border:2px solid #0ff;
   cursor:pointer; transition: all 0.3s ease;
 }
-.playerBox.dead { background:red; }
-.playerBox.winner { background:green; }
+.playerBox.dead { background:red; animation: shake 0.5s; }
+.playerBox.winner { background:green; transform:scale(1.2); }
 
 /* Card glow effect */
 .card-inner.flipped { box-shadow: 0 0 20px #0ff, 0 0 50px #0ff inset; }
+
+/* Particle effect */
+.particle {
+  position:absolute;
+  width:6px;height:6px;
+  background:#0ff; border-radius:50%;
+  pointer-events:none;
+  animation: particleMove 1s forwards;
+}
+
+/* Extra particle types */
+.particle2 { background:#f0f; width:4px; height:4px; animation: particleMove2 1s forwards; }
+.particle3 { background:#ff0; width:5px; height:5px; animation: particleMove3 1s forwards; }
+.particle4 { background:#0f0; width:3px; height:3px; animation: particleMove4 1s forwards; }
+.particle5 { background:#0ff; width:6px; height:6px; animation: particleMove5 1s forwards; }
+
+/* Animations */
+@keyframes glowPulse {0%,100%{box-shadow:0 0 20px #0ff,0 0 50px #0ff inset;}50%{box-shadow:0 0 40px #0ff,0 0 80px #0ff inset;}}
+@keyframes shake {0%{transform:translateX(0);}25%{transform:translateX(-5px);}50%{transform:translateX(5px);}75%{transform:translateX(-5px);}100%{transform:translateX(0);}}
+@keyframes particleMove {0%{opacity:1;}100%{opacity:0; transform:translateY(-50px) translateX(20px) scale(0.5);}}
+@keyframes particleMove2 {0%{opacity:1;}100%{opacity:0; transform:translateY(-40px) translateX(-20px) scale(0.5);}}
+@keyframes particleMove3 {0%{opacity:1;}100%{opacity:0; transform:translateY(-60px) translateX(15px) scale(0.5);}}
+@keyframes particleMove4 {0%{opacity:1;}100%{opacity:0; transform:translateY(-50px) translateX(30px) scale(0.5);}}
+@keyframes particleMove5 {0%{opacity:1;}100%{opacity:0; transform:translateY(-45px) translateX(-25px) scale(0.5);}}
+@keyframes buttonPop {0%{transform:scale(0.9);}50%{transform:scale(1.2);}100%{transform:scale(1);}}
+@keyframes floatUp {0%{transform:translateY(0);}50%{transform:translateY(-10px);}100%{transform:translateY(0);}}
 </style>
 </head>
 <body>
@@ -150,13 +182,11 @@ select:hover,input[type=number]:hover {
       <div class="card-back"><span></span></div>
     </div>
   </div>
-  <button id="continueBtn">CONTINUE</button>
+  <button id="continueBtn" style="display:none;">CONTINUE</button>
 </div>
 
 <!-- End UI -->
-<div id="endUI" style="opacity:0; pointer-events:none;">
-  <h2 id="endTitle">CLICK PLAYER TO CONFIRM DEATH</h2>
-</div>
+<div id="endUI" style="opacity:0; pointer-events:none;"></div>
 
 <script src="cardInfo-howToPlay.js"></script>
 <script>
@@ -191,10 +221,8 @@ function startGame(){
   playerStates=Array(totalPlayers).fill('alive');
   const shuffledRules=shuffle([...cardData]);
   for(let i=0;i<totalPlayers;i++){playerRules.push(shuffledRules[i%shuffledRules.length]);}
-  startUI.style.opacity=0;
-  startUI.style.pointerEvents='none';
-  gameUI.style.opacity=1;
-  gameUI.style.pointerEvents='auto';
+  startUI.style.opacity=0; startUI.style.pointerEvents='none';
+  gameUI.style.opacity=1; gameUI.style.pointerEvents='auto';
   showPlayer(currentPlayer);
 }
 
@@ -213,6 +241,7 @@ playerCardInner.addEventListener('click',()=>{
   const rule=playerRules[currentPlayer][currentLang];
   cardBackText.textContent=rule;
   continueBtn.style.display='inline-block';
+  spawnParticles();
 });
 
 playerCardInner.addEventListener('contextmenu',(e)=>{
@@ -236,11 +265,22 @@ continueBtn.addEventListener('click',()=>{
   if(currentPlayer>=totalPlayers){ endGame(); }else{ showPlayer(currentPlayer); }
 });
 
+function spawnParticles(){
+  const types=['particle','particle2','particle3','particle4','particle5'];
+  for(let i=0;i<15;i++){
+    const p=document.createElement('div');
+    const type=types[Math.floor(Math.random()*types.length)];
+    p.className=type;
+    p.style.left=Math.random()*400+'px';
+    p.style.top=Math.random()*200+'px';
+    document.getElementById('playerCard').appendChild(p);
+    setTimeout(()=>p.remove(),1000);
+  }
+}
+
 function endGame(){
-  gameUI.style.opacity=0;
-  gameUI.style.pointerEvents='none';
-  endUI.style.opacity=1;
-  endUI.style.pointerEvents='auto';
+  gameUI.style.opacity=0; gameUI.style.pointerEvents='none';
+  endUI.style.opacity=1; endUI.style.pointerEvents='auto';
   endUI.innerHTML=`<h2 id="endTitle">${currentLang==='en'?'CLICK PLAYER TO CONFIRM DEATH':currentLang==='zh'?'点击方块杀死玩家':'プレイヤーをクリックして死亡確認'}</h2>`;
   for(let i=0;i<totalPlayers;i++){
     const box=document.createElement('div');
@@ -273,6 +313,7 @@ function checkWinner(){
     replayBtn.textContent=currentLang==='en'?'REPLAY':currentLang==='zh'?'再玩一局':'リプレイ';
     replayBtn.addEventListener('click',()=>location.reload());
     endUI.appendChild(replayBtn);
+    spawnParticles();
   }
 }
 
