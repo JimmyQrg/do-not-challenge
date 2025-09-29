@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DO NOT CHALLENGE</title>
-<link rel="icon" href="https://JimmyQrg.github.io/do-not-challenge/main/icon.png">
+<link rel="icon" href="https://raw.githubusercontent.com/JimmyQrg/do-not-challenge/main/icon.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
 <style>
 body {margin:0;font-family:'Press Start 2P',sans-serif;background:#0f2027;color:white;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;}
@@ -46,7 +46,8 @@ select{font-size:1rem;padding:5px;border-radius:6px;}
 <div id="gameBoard"></div>
 <button id="replayBtn"></button>
 
-<script src="https://cdn.jsdelivr.net/gh/JimmyQrg/do-not-challenge@main/cardInfo-howToPlay.js"></script>
+<!-- Load card information and HowToPlay article from GitHub raw URL -->
+<script src="https://raw.githubusercontent.com/JimmyQrg/do-not-challenge/main/cardInfo-howToPlay.js"></script>
 <script>
 let numPlayers = 6, cards = [], alive = [];
 const gameBoard = document.getElementById("gameBoard");
