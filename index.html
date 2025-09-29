@@ -7,10 +7,9 @@
 <link rel="icon" href="https://JimmyQrg.github.io/do-not-challenge/main/icon.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
 <style>
-body {margin:0; font-family:'Press Start 2P', sans-serif; background:#0f2027; overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center; color:white; height:100vh;}
-#startMenu{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;}
-#startMenu h1{font-size:3rem;color:#fff;text-shadow:0 0 20px #0ff;animation:floatTitle 3s ease-in-out infinite alternate;}
-#startMenu button,#startMenu select{font-size:1.2rem;padding:12px 20px;border-radius:10px;margin:10px;cursor:pointer;transition:transform 0.5s ease;}
+body {margin:0;font-family:'Press Start 2P',sans-serif;background:#0f2027;color:white;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;}
+#startMenu{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;transition:all 0.5s ease;}
+#startMenu h1{font-size:3rem;color:#0ff;text-shadow:0 0 20px #0ff;animation:floatTitle 3s ease-in-out infinite alternate;margin-bottom:40px;}
 #gameBoard{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;margin-top:20px;position:relative;z-index:1;}
 .card{width:250px;height:150px;perspective:1000px;margin:15px;position:relative;cursor:pointer;}
 .card-inner{position:relative;width:100%;height:100%;text-align:center;transform-style:preserve-3d;transition:transform 0.8s cubic-bezier(.4,.2,.2,1);}
@@ -25,18 +24,27 @@ button:hover{background:#ffc107;transform:scale(1.05);}
 @keyframes glowPulse{0%{box-shadow:0 0 20px #00f,0 0 30px #0ff;}100%{box-shadow:0 0 40px #0ff,0 0 50px #00f;}}
 @keyframes floatTitle{0%{transform:translateY(0);}50%{transform:translateY(-20px);}100%{transform:translateY(0);}}
 #particles{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}
+#langContainer{position:absolute;top:20px;right:20px;display:flex;align-items:center;font-size:1rem;z-index:20;}
+#langContainer span{margin-right:8px;font-size:1.2rem;}
+select{font-size:1rem;padding:5px;border-radius:6px;}
+#replayBtn{position:absolute;bottom:20px;display:none;}
 </style>
 </head>
 <body>
 <div id="particles"></div>
+
 <div id="startMenu">
-<h1 id="startTitle"></h1>
-<select id="languageSelectStart"></select>
-<button id="startBtn"></button>
-<button id="howBtn"></button>
+  <h1 id="startTitle"></h1>
+  <div id="langContainer">
+    <span>🌐</span>
+    <select id="languageSelectStart"></select>
+  </div>
+  <button id="startBtn"></button>
+  <button id="howBtn"></button>
 </div>
+
 <div id="gameBoard"></div>
-<button id="replayBtn" style="display:none;"></button>
+<button id="replayBtn"></button>
 
 <script src="https://cdn.jsdelivr.net/gh/JimmyQrg/do-not-challenge@main/cardInfo-howToPlay.js"></script>
 <script>
@@ -56,22 +64,26 @@ const langData = {
   zh:{title:"不要做挑战",start:"开始游戏",how:"游戏规则",replay:"再玩一局"},
   jp:{title:"やってはいけないチャレンジ",start:"ゲーム開始",how:"遊び方",replay:"再挑戦"}
 };
-
 function updateStartMenuText(){
   startTitle.textContent = langData[currentLang].title;
   startBtn.textContent = langData[currentLang].start;
   howBtn.textContent = langData[currentLang].how;
   replayBtn.textContent = langData[currentLang].replay;
 }
-['en','zh','jp'].forEach(l=>{
-  const opt = document.createElement('option');
-  opt.value = l;
-  opt.textContent = langData[l].title;
-  langStart.appendChild(opt);
+const languageOptions = [
+  {value:'en', text:'English'},
+  {value:'zh', text:'中文（简体)'},
+  {value:'jp', text:'日本語'}
+];
+languageOptions.forEach(opt=>{
+  const option = document.createElement('option');
+  option.value = opt.value;
+  option.textContent = opt.text;
+  langStart.appendChild(option);
 });
 updateStartMenuText();
 
-// --- Language switch ---
+// Language switch
 langStart.addEventListener('change',()=>{
   currentLang = langStart.value;
   updateStartMenuText();
@@ -79,7 +91,10 @@ langStart.addEventListener('change',()=>{
 });
 
 // --- Start / How / Replay ---
-startBtn.addEventListener('click', ()=>{startMenu.style.display="none"; setupGame();});
+startBtn.addEventListener('click', ()=>{
+  startMenu.style.display="none"; 
+  setupGame();
+});
 howBtn.addEventListener('click', ()=>{
   const url = 'howtoplay.html?lang=' + currentLang;
   try{
@@ -129,11 +144,11 @@ function setupGame(){
     cards.push(card);
 
     // Click to flip
-    card.addEventListener('click',()=>{card.classList.add('flipped');});
+    card.addEventListener('click',()=>{card.classList.add('flipped'); autoFitText(span);});
     // Right click / hold inspection
-    card.addEventListener('contextmenu',e=>{e.preventDefault(); card.classList.toggle('flipped'); inspectionMode(card);});
+    card.addEventListener('contextmenu',e=>{e.preventDefault(); card.classList.toggle('flipped'); inspectionMode(card); autoFitText(span);});
     let holdTimer=null;
-    card.addEventListener('touchstart',()=>{holdTimer=setTimeout(()=>{card.classList.add('flipped'); inspectionMode(card);},500);});
+    card.addEventListener('touchstart',()=>{holdTimer=setTimeout(()=>{card.classList.add('flipped'); inspectionMode(card); autoFitText(span);},500);});
     card.addEventListener('touchend',()=>{clearTimeout(holdTimer);});
     // Double click = eliminate
     card.addEventListener('dblclick',()=>{
@@ -142,6 +157,16 @@ function setupGame(){
       card.querySelector('.card-back span').textContent='ELIMINATED';
       checkEnd(); explodeEffect(card);
     });
+  }
+}
+
+// Auto-fit text for card back
+function autoFitText(span){
+  let fontSize=16;
+  span.style.fontSize = fontSize+'px';
+  while(span.scrollHeight>span.offsetHeight && fontSize>8){
+    fontSize--;
+    span.style.fontSize=fontSize+'px';
   }
 }
 
@@ -157,6 +182,7 @@ function updateAllCardText(){
     const span = card.querySelector('.card-back span');
     front.textContent = (i+1) + "号玩家";
     span.textContent = getRandomCardText(currentLang);
+    autoFitText(span);
   });
 }
 
