@@ -4,178 +4,276 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DO NOT CHALLENGE</title>
-<link rel="icon" href="https://raw.githubusercontent.com/JimmyQrg/do-not-challenge/main/icon.png">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+<link rel="icon" type="image/png" href="icon.png">
 <style>
-body{
-  margin:0;
-  font-family:'Press Start 2P',sans-serif;
-  background:linear-gradient(120deg,#0f2027,#203a43);
-  color:white;
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  height:100vh;
-}
-#startMenu{
-  position:absolute;top:0;left:0;width:100%;height:100%;
-  background:rgba(0,0,0,0.85);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  z-index:10;transition:all 0.5s ease;
-}
-#startMenu h1{
-  font-size:3rem;color:#0ff;text-shadow:0 0 20px #0ff;margin-bottom:40px;
-  animation:floatTitle 3s ease-in-out infinite alternate;
-}
-@keyframes floatTitle{0%{transform:translateY(0);}50%{transform:translateY:-20px;}100%{transform:translateY(0);}}
-button{
-  font-family:'Press Start 2P',sans-serif;font-size:1rem;font-weight:bold;
-  color:#fff;background: linear-gradient(145deg, #ff5722, #ff9800);
-  border:2px solid #fff;border-radius:12px;padding:15px 30px;margin:10px;
-  cursor:pointer;text-shadow:0 0 5px #000;
-  box-shadow:0 5px 15px rgba(255,152,0,0.6),0 0 20px rgba(255,87,34,0.5);
-  transition: all 0.3s ease;position: relative;overflow:hidden;
-}
-button:hover{
-  background: linear-gradient(145deg, #ff9800, #ffc107);
-  transform: scale(1.05) rotateZ(1deg);
-  box-shadow:0 5px 25px rgba(255,152,0,0.8),0 0 40px rgba(255,87,34,0.7);
-}
-button:active{transform: scale(0.95);box-shadow:0 3px 10px rgba(255,152,0,0.6),0 0 20px rgba(255,87,34,0.5);}
-button.glow{animation:buttonGlow 1.5s infinite alternate;}
-@keyframes buttonGlow{0%{box-shadow:0 5px 15px rgba(255,152,0,0.6),0 0 20px rgba(255,87,34,0.5);}100%{box-shadow:0 8px 25px rgba(255,152,0,0.9),0 0 40px rgba(255,87,34,0.8);}}
-#langContainer{position:absolute;top:20px;right:20px;display:flex;align-items:center;font-size:1rem;z-index:20;}
-#langContainer span{margin-right:8px;font-size:1.2rem;}
-select{font-size:1rem;padding:5px;border-radius:6px;}
-#gameBoard{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;margin-top:20px;position:relative;z-index:1;}
-.card{width:250px;height:150px;perspective:1000px;margin:15px;position:relative;cursor:pointer;}
-.card-inner{position:relative;width:100%;height:100%;text-align:center;transform-style:preserve-3d;transition:transform 0.8s cubic-bezier(.4,.2,.2,1);}
-.card.flipped .card-inner{transform:rotateY(180deg);}
-.card-front,.card-back{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:15px;display:flex;justify-content:center;align-items:center;padding:5px;box-shadow:0 5px 20px rgba(0,0,0,0.7);font-size:0.8rem;text-align:center;}
-.card-front{background:#555;color:white;}
-.card-back{background:#00bfff;color:black;transform:rotateY(180deg);}
-.card-back span{display:block;overflow:hidden;word-wrap:break-word;}
-#particles{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}
-#replayBtn{position:absolute;bottom:20px;display:none;}
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+  body {
+    margin: 0;
+    overflow: hidden;
+    font-family: 'Press Start 2P', cursive;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: #fff;
+  }
+  #startUI, #gameUI, #endUI {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    transition: opacity 0.5s ease;
+  }
+  button {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 18px;
+    padding: 12px 20px;
+    background: #222;
+    border: 2px solid #fff;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  button:hover {
+    background: #fff;
+    color: #222;
+    transform: scale(1.05);
+  }
+  #languageSelector {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+  #languageSelector img {
+    width: 32px;
+    height: 32px;
+  }
+  #playerCard {
+    width: 400px;
+    height: 200px;
+    perspective: 1000px;
+    cursor: pointer;
+  }
+  .card-inner {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+    position: relative;
+  }
+  .card-inner.flipped {
+    transform: rotateY(180deg);
+  }
+  .card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid #fff;
+    border-radius: 12px;
+    font-size: 16px;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  .card-front {
+    background: #333;
+  }
+  .card-back {
+    background: #111;
+    transform: rotateY(180deg);
+    font-size: 18px;
+  }
+  #continueBtn {
+    display:none;
+  }
+  #endUI {
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 20px;
+    justify-content: center;
+    align-content: flex-start;
+    overflow-y: auto;
+  }
+  .playerBox {
+    width: 100px;
+    height: 100px;
+    background: #444;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:14px;
+    border:2px solid #fff;
+    cursor:pointer;
+    transition: all 0.3s ease;
+  }
+  .playerBox.dead { background:red; }
+  .playerBox.winner { background:green; }
 </style>
 </head>
 <body>
-<div id="particles"></div>
-<div id="startMenu">
-  <h1 id="startTitle"></h1>
-  <div id="langContainer"><span>🌐</span><select id="languageSelectStart"></select></div>
-  <button id="startBtn" class="glow"></button>
-  <button id="howBtn" class="glow"></button>
+
+<!-- Language Selector -->
+<div id="languageSelector">
+  <img src="https://raw.githubusercontent.com/JimmyQrg/do-not-challenge/main/icon.png" alt="Globe">
+  <select id="languageSelect">
+    <option value="en">English</option>
+    <option value="zh">中文（简体）</option>
+    <option value="jp">日本語</option>
+  </select>
 </div>
-<div id="gameBoard"></div>
-<button id="replayBtn" class="glow"></button>
 
-<script src="https://raw.githubusercontent.com/JimmyQrg/do-not-challenge/main/cardInfo-howToPlay.js"></script>
+<!-- Start UI -->
+<div id="startUI">
+  <h1 id="gameTitle">DO NOT CHALLENGE</h1>
+  <label for="playerCount">Players:</label>
+  <input type="number" id="playerCount" min="2" max="20" value="2">
+  <button id="startBtn">START</button>
+  <button id="howToBtn">HOW TO PLAY</button>
+</div>
+
+<!-- Game UI -->
+<div id="gameUI" style="opacity:0; pointer-events:none;">
+  <h2 id="playerLabel">Player 1</h2>
+  <div id="playerCard">
+    <div class="card-inner">
+      <div class="card-front"><span>Click to reveal rule</span></div>
+      <div class="card-back"><span></span></div>
+    </div>
+  </div>
+  <button id="continueBtn">CONTINUE</button>
+</div>
+
+<!-- End UI -->
+<div id="endUI" style="opacity:0; pointer-events:none;">
+  <h2 id="endTitle">CLICK PLAYER TO CONFIRM DEATH</h2>
+</div>
+
+<script src="cardInfo-howToPlay.js"></script>
 <script>
-// --- Language Data ---
-const langData={en:{title:"DO NOT CHALLENGE",start:"START GAME",how:"HOW TO PLAY",replay:"REPLAY"},zh:{title:"不要做挑战",start:"开始游戏",how:"游戏规则",replay:"再玩一局"},jp:{title:"やってはいけないチャレンジ",start:"ゲーム開始",how:"遊び方",replay:"再挑戦"}};
-let currentLang='en';
-const startTitle=document.getElementById("startTitle");
-const startBtn=document.getElementById("startBtn");
-const howBtn=document.getElementById("howBtn");
-const langStart=document.getElementById("languageSelectStart");
-const replayBtn=document.getElementById("replayBtn");
-const gameBoard=document.getElementById("gameBoard");
-let cards=[],alive=[],numPlayers=6;
+let currentLang = 'en';
+let totalPlayers = 2;
+let currentPlayer = 0;
+let playerRules = [];
+let playerStates = [];
 
-function updateStartMenuText(){startTitle.textContent=langData[currentLang].title;startBtn.textContent=langData[currentLang].start;howBtn.textContent=langData[currentLang].how;replayBtn.textContent=langData[currentLang].replay;}
-const languageOptions=[{value:'en',text:'English'},{value:'zh',text:'中文（简体)'},{value:'jp',text:'日本語'}];
-languageOptions.forEach(opt=>{const o=document.createElement('option');o.value=opt.value;o.textContent=opt.text;langStart.appendChild(o);});
-updateStartMenuText();
-langStart.addEventListener('change',()=>{currentLang=langStart.value;updateStartMenuText();updateAllCardText();});
+const startUI = document.getElementById('startUI');
+const gameUI = document.getElementById('gameUI');
+const endUI = document.getElementById('endUI');
 
-// --- Particles ---
-const particleContainer=document.getElementById("particles");
-function createParticles(count){for(let i=0;i<count;i++){const p=document.createElement('div');p.style.position='absolute';p.style.width=p.style.height='4px';p.style.background='rgba(255,255,255,0.2)';p.style.borderRadius='50%';p.style.top=Math.random()*100+'%';p.style.left=Math.random()*100+'%';particleContainer.appendChild(p);}}
-createParticles(50);
+const startBtn = document.getElementById('startBtn');
+const howToBtn = document.getElementById('howToBtn');
+const playerCountInput = document.getElementById('playerCount');
 
-// --- Game Functions ---
-function setupGame(){
-  gameBoard.innerHTML='';cards=[];alive=[];
-  for(let i=0;i<numPlayers;i++){
-    const card=document.createElement("div");card.className="card glow";card.dataset.index=i;alive.push(true);
-    const inner=document.createElement("div");inner.className="card-inner";
-    const front=document.createElement("div");front.className="card-front";front.textContent=(i+1)+"号玩家";
-    const back=document.createElement("div");back.className="card-back";const span=document.createElement("span");span.textContent=getRandomCardText(currentLang);back.appendChild(span);
-    inner.appendChild(front);inner.appendChild(back);card.appendChild(inner);gameBoard.appendChild(card);cards.push(card);
+const playerLabel = document.getElementById('playerLabel');
+const playerCardInner = document.querySelector('.card-inner');
+const cardBackText = document.querySelector('.card-back span');
+const continueBtn = document.getElementById('continueBtn');
 
-    // Left-click: kill
-    card.addEventListener('click',(e)=>{if(!card.classList.contains('inspecting')){killPlayer(i);}});
-    // Right-click or long press: inspect
-    card.addEventListener('contextmenu',(e)=>{e.preventDefault();inspectPlayer(card);});
-    card.addEventListener('touchstart',(e)=>{card.touchTimer=setTimeout(()=>inspectPlayer(card),500);});
-    card.addEventListener('touchend',(e)=>{clearTimeout(card.touchTimer);if(card.classList.contains('inspecting')){uninspectPlayer(card);}});
+const languageSelect = document.getElementById('languageSelect');
 
-    card.addEventListener('mouseover',()=>{card.style.transform='scale(1.05)';});
-    card.addEventListener('mouseout',()=>{card.style.transform='scale(1)';});
+function shuffle(array) {
+  return array.sort(() => Math.random() - 0.5);
+}
+
+function startGame() {
+  totalPlayers = Number(playerCountInput.value);
+  currentPlayer = 0;
+  playerRules = [];
+  playerStates = Array(totalPlayers).fill('alive');
+  const shuffledRules = shuffle([...cardData]);
+  for(let i=0;i<totalPlayers;i++){
+    playerRules.push(shuffledRules[i % shuffledRules.length]);
+  }
+  startUI.style.opacity = 0;
+  startUI.style.pointerEvents = 'none';
+  gameUI.style.opacity = 1;
+  gameUI.style.pointerEvents = 'auto';
+  showPlayer(currentPlayer);
+}
+
+function showPlayer(index) {
+  playerLabel.textContent = currentLang==='en'?`Player ${index+1}`:currentLang==='zh'?`${index+1}号玩家`:`プレイヤー${index+1}`;
+  playerCardInner.classList.remove('flipped');
+  cardBackText.textContent = '';
+  continueBtn.style.display='none';
+}
+
+playerCardInner.addEventListener('click',()=>{
+  if(playerCardInner.classList.contains('flipped')) return;
+  playerCardInner.classList.add('flipped');
+  const rule = playerRules[currentPlayer][currentLang];
+  cardBackText.textContent = rule;
+  continueBtn.style.display='inline-block';
+});
+
+continueBtn.addEventListener('click',()=>{
+  currentPlayer++;
+  if(currentPlayer>=totalPlayers){
+    endGame();
+  } else {
+    showPlayer(currentPlayer);
+  }
+});
+
+function endGame() {
+  gameUI.style.opacity=0;
+  gameUI.style.pointerEvents='none';
+  endUI.style.opacity=1;
+  endUI.style.pointerEvents='auto';
+  endUI.innerHTML = `<h2 id="endTitle">${currentLang==='en'?'CLICK PLAYER TO CONFIRM DEATH':currentLang==='zh'?'点击方块杀死玩家':'プレイヤーをクリックして死亡確認'}</h2>`;
+  for(let i=0;i<totalPlayers;i++){
+    const box = document.createElement('div');
+    box.classList.add('playerBox');
+    box.textContent = i+1;
+    box.addEventListener('click',()=>{
+      if(box.classList.contains('dead')) return;
+      box.classList.add('dead');
+      checkWinner();
+    });
+    endUI.appendChild(box);
   }
 }
 
-function getRandomCardText(lang){if(lang==='zh')return cardInfoZH[Math.floor(Math.random()*cardInfoZH.length)];else if(lang==='jp')return cardInfoJP[Math.floor(Math.random()*cardInfoJP.length)];else return cardInfo[Math.floor(Math.random()*cardInfo.length)];}
-
-function updateAllCardText(){cards.forEach((card,i)=>{const front=card.querySelector('.card-front');const span=card.querySelector('.card-back span');front.textContent=(i+1)+"号玩家";span.textContent=getRandomCardText(currentLang);autoFitText(span);});}
-function autoFitText(span){span.style.fontSize='14px';while(span.scrollHeight>span.offsetHeight && parseInt(span.style.fontSize)>6){span.style.fontSize=(parseInt(span.style.fontSize)-1)+'px';}}
-
-function killPlayer(index){
-  if(!alive[index])return;
-  alive[index]=false;
-  const card=cards[index];
-  card.style.background='red';
-  explodeEffect(card);
-  checkEnd();
-}
-
-function explodeEffect(card){
-  for(let i=0;i<15;i++){
-    const part=document.createElement('div');
-    part.style.position='absolute';
-    part.style.width=8+'px';
-    part.style.height=8+'px';
-    part.style.background='orange';
-    part.style.borderRadius='50%';
-    part.style.left=Math.random()*100+'%';
-    part.style.top=Math.random()*100+'%';
-    part.style.transition='all 0.8s ease-out';
-    card.appendChild(part);
-    setTimeout(()=>{part.style.transform=`translate(${Math.random()*100-50}px,${Math.random()*100-50}px) scale(0)`;part.style.opacity='0';},50);
-    setTimeout(()=>part.remove(),900);
+function checkWinner(){
+  const alive = Array.from(document.querySelectorAll('.playerBox')).filter(b=>!b.classList.contains('dead'));
+  if(alive.length===1){
+    const winnerBox = alive[0];
+    winnerBox.classList.add('winner');
+    const boxes = document.querySelectorAll('.playerBox');
+    boxes.forEach((b,i)=>{
+      b.textContent = playerRules[i][currentLang];
+    });
+    const replayBtn = document.createElement('button');
+    replayBtn.textContent = currentLang==='en'?'REPLAY':currentLang==='zh'?'再玩一局':'リプレイ';
+    replayBtn.addEventListener('click',()=>location.reload());
+    endUI.appendChild(replayBtn);
   }
 }
 
-function checkEnd(){
-  const remaining=alive.filter(a=>a).length;
-  if(remaining===1){
-    const winnerIndex=alive.findIndex(a=>a);
-    cards[winnerIndex].style.background='green';
-    cards.forEach(card=>{card.classList.add('flipped');});
-    replayBtn.style.display='block';
-  }
-}
+// Language switching
+languageSelect.addEventListener('change',(e)=>{
+  currentLang = e.target.value;
+  startBtn.textContent = currentLang==='en'?'START':currentLang==='zh'?'开始':'スタート';
+  howToBtn.textContent = currentLang==='en'?'HOW TO PLAY':currentLang==='zh'?'游戏规则':'遊び方';
+  if(currentPlayer<totalPlayers) showPlayer(currentPlayer);
+});
 
-function inspectPlayer(card){
-  if(card.classList.contains('inspecting'))return;
-  card.classList.add('inspecting');
-  card.querySelector('.card-inner').classList.add('flipped');
-  cards.forEach(c=>{if(c!==card && alive[c.dataset.index])c.style.filter='grayscale(70%)';});
-}
-
-function uninspectPlayer(card){
-  card.classList.remove('inspecting');
-  card.querySelector('.card-inner').classList.remove('flipped');
-  cards.forEach(c=>{if(alive[c.dataset.index])c.style.filter='none';});
-}
-
-// --- Start / Replay ---
-startBtn.addEventListener('click',()=>{document.getElementById("startMenu").style.display='none';setupGame();});
-howBtn.addEventListener('click',()=>{window.open('howtoplay.html?lang='+currentLang,'_blank')});
-replayBtn.addEventListener('click',()=>{replayBtn.style.display='none';setupGame();});
+// Start & How To Play
+startBtn.addEventListener('click', startGame);
+howToBtn.addEventListener('click',()=>{
+  window.open('howtoplay.html','_blank') || alert(howToPlay[currentLang]);
+});
 </script>
 </body>
 </html>
