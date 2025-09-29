@@ -1,49 +1,116 @@
 // cardInfo-howToPlay.js
 
 // Card information
-const cardInfo = [
-  "DO NOT SWEAR: Avoid using any swear words during the game. If you break this rule, you are immediately eliminated.",
-  "DO NOT SAY YOUR NAME: Never say your own or others' real names. Breaking this rule leads to elimination.",
-  "DO NOT LOOK AT ELECTRONICS' SCREEN: Avoid looking at any electronic devices or screens, including phones and monitors.",
-  "DO NOT STARE AT EACH OTHER FOR MORE THAN 3 SECONDS: Avoid prolonged eye contact with other players.",
-  "DO NOT STOP TALKING FOR MORE THAN 5 SECONDS: Keep speaking; silence longer than 5 seconds will eliminate you.",
-  "DO NOT SAY A SENTENCE WITH MORE THAN 5 WORDS: Keep your sentences short. Long sentences are not allowed.",
-  "DO NOT SAY A SENTENCE WITH LESS THAN OR EQUAL TO 2 WORDS: Avoid extremely short responses.",
-  "DO NOT LAUGH: No laughter is allowed during the game. Breaking this rule eliminates you.",
-  "DO NOT TOUCH CLOTH USING HAND: Avoid touching your clothes with your hands.",
-  "DO NOT ASK QUESTIONS: Asking questions is prohibited."
-  // Add more 20+ rules following the same pattern
-];
-
-// Chinese simplified
-const cardInfoZH = [
-  "不要骂脏话：游戏过程中禁止使用任何脏话，一旦违规立即淘汰。",
-  "不要说名字：不要说出自己的或他人的真实姓名，违规即被淘汰。",
-  "不要看电子屏幕：不要看任何电子设备或屏幕，包括手机和电脑。",
-  "不要对视超过3秒：避免与其他玩家长时间对视。",
-  "不要停止说话超过5秒：持续讲话，超过5秒的沉默将被淘汰。",
-  "不要一句话说超过5个字：保持句子简短，超过规定长度将淘汰。",
-  "不要只说一个字的话：避免极短的回答。",
-  "不要笑：游戏过程中禁止笑声，违规将被淘汰。",
-  "不要用手触摸衣物：避免用手触摸衣物。",
-  "不要问问题：提问是不允许的。"
-  // Add more 20+ rules following the same pattern
-];
-
-// Japanese
-const cardInfoJP = [
-  "汚い言葉を使わないでください：ゲーム中は汚い言葉を使用してはいけません。違反すると即失格です。",
-  "名前を言わないでください：自分や他人の本名を言ってはいけません。違反すると失格です。",
-  "電子機器の画面を見ないでください：スマホやパソコンなどの電子機器を見てはいけません。",
-  "3秒以上見つめないでください：他のプレイヤーを長時間見つめないでください。",
-  "5秒以上黙らないでください：話し続けてください。5秒以上の沈黙は失格です。",
-  "一文に5語以上言わないでください：文章は短く保ってください。",
-  "1語だけの文を言わないでください：極端に短い返答は禁止です。",
-  "笑わないでください：ゲーム中に笑ってはいけません。違反すると失格です。",
-  "手で服に触れないでください：手で服に触れてはいけません。",
-  "質問をしないでください：質問は禁止です。"
-  // Add more 20+ rules following the same pattern
-];
+const cardTexts = {
+  en: [
+    "DO NOT SWEAR",
+    "DO NOT READ NAMES",
+    "DO NOT LOOK AT ELECTRONICS' SCREEN",
+    "DO NOT STARE AT EACH OTHER FOR MORE THAN 3 SECONDS",
+    "DO NOT STOP TALKING FOR MORE THAN 5 SECONDS",
+    "DO NOT SAY A SENTENCE WITH MORE THAN 5 WORDS",
+    "DO NOT SAY A SENTENCE WITH LESS THAN OR EQUAL TO 2 WORDS",
+    "DO NOT LAUGH",
+    "DO NOT TOUCH CLOTH USING HAND",
+    "DO NOT ASK QUESTIONS",
+    "DO NOT ANSWER QUESTIONS",
+    "DO NOT REACH USING HAND",
+    "DO NOT SAY VERB",
+    "DO NOT SAY ADJECTIVE",
+    "DO NOT SAY MORE THAN ONE NOUN IN 3 SECONDS",
+    "DO NOT SPEAK OPINION",
+    "DO NOT MOVE YOUR FEET",
+    "DO NOT MOVE YOUR HAND UPWARD FOR MORE THAN 3 CM",
+    "DO NOT MAKE YOUR FINGER POSITIONS THE SAME (COMPARE TWO HANDS)",
+    "DO NOT TOUCH YOUR LEGS",
+    "DO NOT SAY ANYTHING ABOUT FOOD OR OUTDOOR",
+    "DO NOT TOUCH ELECTRONICS",
+    "DO NOT BE SILENT FOR MORE THAN 10 SECONDS",
+    "DO NOT SIT FOR 20 SECONDS",
+    "DO NOT SAY I / ME / MY / MINE",
+    "DO NOT SAY YOU / YOUR / YOURS",
+    "DO NOT DISAGREE",
+    "DO NOT AGREE",
+    "DO NOT REJECT",
+    "DO NOT SAY FILLER WORDS (LIKE UM, UH, LIKE)",
+    "DO NOT SAY LESS THAN 4 WORDS TWICE IN A ROW",
+    "DO NOT TALK ABOUT SCHOOL OR NUMBERS",
+    "DO NOT SPEAK NON-NATIVE LANGUAGE",
+    "DO NOT MOVE HAND MORE THAN 20 CM IN 10 SECONDS"
+  ],
+  zh: [
+    "不要骂脏话",
+    "不要说名字",
+    "不要看电子屏幕",
+    "不要对视超过3秒",
+    "不要停止说话超过5秒",
+    "不要一句话说超过8个字",
+    "不要只说一个或两个字",
+    "不要笑",
+    "不要用手触摸衣物",
+    "不要问问题",
+    "不要回答问题",
+    "不要伸手",
+    "不要说动词",
+    "不要说形容词",
+    "不要在3秒内说超过1个名词",
+    "不要说观点",
+    "不要动腿",
+    "不要将手上升超过3厘米",
+    "不要让双手姿势一样",
+    "不要摸腿",
+    "不要说关于食物或室外的东西",
+    "不要碰电子产品",
+    "不要不发声超过10秒",
+    "不要坐着超过20秒",
+    "不要说“我”",
+    "不要说“你”",
+    "不要说“不”",
+    "不要答应别人",
+    "不要拒绝别人",
+    "不要说填充词（例如“呃”，“那个”）",
+    "不要连续两次说少于4个字的话",
+    "不要说与学业或数字相关的东西",
+    "不要说母语以外的语言",
+    "不要在10秒内移动手超过20厘米"
+  ],
+  jp: [
+    "悪口を言うな",
+    "名前を読むな",
+    "電子画面を見るな",
+    "3秒以上見つめるな",
+    "5秒以上黙るな",
+    "5語以上の文を言うな",
+    "2語以下の文を言うな",
+    "笑うな",
+    "服を手で触るな",
+    "質問するな",
+    "質問に答えるな",
+    "手を伸ばすな",
+    "動詞を言うな",
+    "形容詞を言うな",
+    "3秒以内に名詞を2つ以上言うな",
+    "意見を言うな",
+    "足を動かすな",
+    "手を3cm以上上げるな",
+    "両手の形を同じにするな",
+    "足を触るな",
+    "食べ物や外のことを言うな",
+    "電子製品を触るな",
+    "10秒以上黙るな",
+    "20秒以上座るな",
+    "「私」を言うな",
+    "「あなた」を言うな",
+    "「いいえ」を言うな",
+    "同意するな",
+    "拒否するな",
+    "間投詞を言うな（えー、あのー等）",
+    "4語未満を2回続けて言うな",
+    "勉強や数字のことを言うな",
+    "母国語以外を話すな",
+    "10秒以内に20cm以上手を動かすな"
+  ]
+};
 
 // How To Play article (50+ words per language)
 const cardHowToPlay = {
