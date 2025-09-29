@@ -3,103 +3,60 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HOW TO PLAY - DO NOT CHALLENGE</title>
+<title>HOW TO PLAY</title>
 <link rel="icon" href="https://raw.githubusercontent.com/JimmyQrg/do-not-challenge/main/icon.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
 <style>
-body {
+body{
   margin:0;
-  font-family:'Press Start 2P', sans-serif;
-  background:#0f2027;
+  font-family:'Press Start 2P',sans-serif;
+  background:linear-gradient(120deg,#0f2027,#203a43);
   color:white;
+  overflow-x:hidden;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:flex-start;
   min-height:100vh;
-  padding:20px;
 }
-h1{
-  font-size:2rem;
-  color:#0ff;
-  text-shadow:0 0 20px #0ff;
-  margin-bottom:20px;
-  text-align:center;
-}
-#content{
-  max-width:900px;
-  background:rgba(0,0,0,0.85);
-  padding:20px;
-  border-radius:15px;
-  box-shadow:0 5px 30px rgba(0,255,255,0.5);
-  white-space:pre-wrap;
-  line-height:1.5;
-  font-size:0.85rem;
-}
-#langContainer{
-  position:fixed;
-  top:20px;
-  right:20px;
-  display:flex;
-  align-items:center;
-  font-size:1rem;
-}
+#langContainer{position:absolute;top:20px;right:20px;display:flex;align-items:center;font-size:1rem;z-index:20;}
 #langContainer span{margin-right:8px;font-size:1.2rem;}
 select{font-size:1rem;padding:5px;border-radius:6px;}
+h1{text-align:center;margin-top:60px;color:#0ff;text-shadow:0 0 15px #0ff;}
+#article{max-width:900px;margin:50px auto;padding:20px;background:rgba(0,0,0,0.7);border-radius:15px;box-shadow:0 0 20px rgba(0,255,255,0.3);font-size:1rem;line-height:1.6;text-align:left;}
 </style>
 </head>
 <body>
-<h1 id="title">HOW TO PLAY</h1>
-<div id="langContainer">
-  <span>🌐</span>
-  <select id="languageSelect"></select>
-</div>
-<div id="content"></div>
+<div id="langContainer"><span>🌐</span><select id="languageSelect"></select></div>
+<h1 id="title"></h1>
+<div id="article"></div>
 
-<!-- Load card information and HowToPlay article from GitHub raw URL -->
 <script src="https://raw.githubusercontent.com/JimmyQrg/do-not-challenge/main/cardInfo-howToPlay.js"></script>
 <script>
-// Get URL param for initial language
-function getQueryParam(name){
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(name);
-}
+const langData={en:"HOW TO PLAY",zh:"游戏规则",jp:"遊び方"};
+const titleEl=document.getElementById("title");
+const articleEl=document.getElementById("article");
+const langSelect=document.getElementById("languageSelect");
+const languageOptions=[{value:'en',text:'English'},{value:'zh',text:'中文（简体)'},{value:'jp',text:'日本語'}];
+languageOptions.forEach(opt=>{const o=document.createElement('option');o.value=opt.value;o.textContent=opt.text;langSelect.appendChild(o);});
+let currentLang='en';
 
-let currentLang = getQueryParam('lang') || 'en';
-const contentDiv = document.getElementById("content");
-const languageSelect = document.getElementById("languageSelect");
-
-// Populate language selector
-const languageOptions = [
-  {value:'en', text:'English'},
-  {value:'zh', text:'中文（简体）'},
-  {value:'jp', text:'日本語'}
-];
-languageOptions.forEach(optData=>{
-  const opt = document.createElement('option');
-  opt.value = optData.value;
-  opt.textContent = optData.text;
-  languageSelect.appendChild(opt);
-});
-languageSelect.value = currentLang;
-
-// Update content
-function updateContent(){
-  if(typeof cardHowToPlay !== 'undefined' && cardHowToPlay[currentLang]){
-    contentDiv.textContent = cardHowToPlay[currentLang];
-  } else {
-    contentDiv.textContent = "No information available in this language.";
+function updateText(){
+  titleEl.textContent=langData[currentLang];
+  let content="";
+  try{
+    if(currentLang==='zh') content=howToPlayZH;
+    else if(currentLang==='jp') content=howToPlayJP;
+    else content=howToPlay;
+  }catch(e){
+    alert("Cannot load How To Play article. Please check the file cardInfo-howToPlay.js");
+    content="Cannot load article.";
   }
+  articleEl.textContent=content;
 }
 
-// Switch language dynamically
-languageSelect.addEventListener('change', ()=>{
-  currentLang = languageSelect.value;
-  updateContent();
-});
-
-// Initialize content
-updateContent();
+langSelect.addEventListener('change',()=>{currentLang=langSelect.value;updateText();});
+updateText();
 </script>
 </body>
 </html>
