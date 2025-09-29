@@ -7,7 +7,6 @@
 <link rel="icon" type="image/png" href="icon.png">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-
 body {
   margin:0;
   overflow:hidden;
@@ -253,6 +252,11 @@ function endGame(){
       box.style.transform='scale(1.1)';
       setTimeout(()=>box.style.transform='scale(1)',100);
       checkWinner();
+    });
+    box.addEventListener('contextmenu',(e)=>{
+      e.preventDefault();
+      if(box.classList.contains('flipped')){ box.textContent=i+1; box.classList.remove('flipped'); }
+      else { box.textContent=playerRules[i][currentLang]; box.classList.add('flipped'); }
     });
     endUI.appendChild(box);
   }
