@@ -12,9 +12,12 @@
     margin: 0;
     overflow: hidden;
     font-family: 'Press Start 2P', cursive;
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
     color: #fff;
+    background: url('background.png') no-repeat center center fixed;
+    background-size: cover;
   }
+
+  /* Keep all previous UI, buttons, card styles, glow, and animation effects intact */
   #startUI, #gameUI, #endUI {
     position: absolute;
     width: 100%;
@@ -86,17 +89,13 @@
     padding: 20px;
     box-sizing: border-box;
   }
-  .card-front {
-    background: #333;
-  }
-  .card-back {
+  .card-front { background: #333; }
+  .card-back { 
     background: #111;
     transform: rotateY(180deg);
     font-size: 18px;
   }
-  #continueBtn {
-    display:none;
-  }
+  #continueBtn { display:none; }
   #endUI {
     flex-wrap: wrap;
     gap: 15px;
@@ -125,7 +124,7 @@
 
 <!-- Language Selector -->
 <div id="languageSelector">
-  <img src="https://raw.githubusercontent.com/JimmyQrg/do-not-challenge/main/icon.png" alt="Globe">
+  <img src="icon.png" alt="Globe">
   <select id="languageSelect">
     <option value="en">English</option>
     <option value="zh">中文（简体）</option>
@@ -182,30 +181,26 @@ const continueBtn = document.getElementById('continueBtn');
 
 const languageSelect = document.getElementById('languageSelect');
 
-function shuffle(array) {
-  return array.sort(() => Math.random() - 0.5);
-}
+function shuffle(array){ return array.sort(()=>Math.random()-0.5); }
 
-function startGame() {
+function startGame(){
   totalPlayers = Number(playerCountInput.value);
   currentPlayer = 0;
   playerRules = [];
   playerStates = Array(totalPlayers).fill('alive');
   const shuffledRules = shuffle([...cardData]);
-  for(let i=0;i<totalPlayers;i++){
-    playerRules.push(shuffledRules[i % shuffledRules.length]);
-  }
-  startUI.style.opacity = 0;
-  startUI.style.pointerEvents = 'none';
-  gameUI.style.opacity = 1;
-  gameUI.style.pointerEvents = 'auto';
+  for(let i=0;i<totalPlayers;i++){ playerRules.push(shuffledRules[i % shuffledRules.length]); }
+  startUI.style.opacity=0;
+  startUI.style.pointerEvents='none';
+  gameUI.style.opacity=1;
+  gameUI.style.pointerEvents='auto';
   showPlayer(currentPlayer);
 }
 
-function showPlayer(index) {
+function showPlayer(index){
   playerLabel.textContent = currentLang==='en'?`Player ${index+1}`:currentLang==='zh'?`${index+1}号玩家`:`プレイヤー${index+1}`;
   playerCardInner.classList.remove('flipped');
-  cardBackText.textContent = '';
+  cardBackText.textContent='';
   continueBtn.style.display='none';
 }
 
@@ -219,23 +214,19 @@ playerCardInner.addEventListener('click',()=>{
 
 continueBtn.addEventListener('click',()=>{
   currentPlayer++;
-  if(currentPlayer>=totalPlayers){
-    endGame();
-  } else {
-    showPlayer(currentPlayer);
-  }
+  if(currentPlayer>=totalPlayers){ endGame(); } else { showPlayer(currentPlayer); }
 });
 
-function endGame() {
+function endGame(){
   gameUI.style.opacity=0;
   gameUI.style.pointerEvents='none';
   endUI.style.opacity=1;
   endUI.style.pointerEvents='auto';
-  endUI.innerHTML = `<h2 id="endTitle">${currentLang==='en'?'CLICK PLAYER TO CONFIRM DEATH':currentLang==='zh'?'点击方块杀死玩家':'プレイヤーをクリックして死亡確認'}</h2>`;
+  endUI.innerHTML=`<h2 id="endTitle">${currentLang==='en'?'CLICK PLAYER TO CONFIRM DEATH':currentLang==='zh'?'点击方块杀死玩家':'プレイヤーをクリックして死亡確認'}</h2>`;
   for(let i=0;i<totalPlayers;i++){
-    const box = document.createElement('div');
+    const box=document.createElement('div');
     box.classList.add('playerBox');
-    box.textContent = i+1;
+    box.textContent=i+1;
     box.addEventListener('click',()=>{
       if(box.classList.contains('dead')) return;
       box.classList.add('dead');
@@ -251,17 +242,14 @@ function checkWinner(){
     const winnerBox = alive[0];
     winnerBox.classList.add('winner');
     const boxes = document.querySelectorAll('.playerBox');
-    boxes.forEach((b,i)=>{
-      b.textContent = playerRules[i][currentLang];
-    });
-    const replayBtn = document.createElement('button');
+    boxes.forEach((b,i)=>{ b.textContent = playerRules[i][currentLang]; });
+    const replayBtn=document.createElement('button');
     replayBtn.textContent = currentLang==='en'?'REPLAY':currentLang==='zh'?'再玩一局':'リプレイ';
     replayBtn.addEventListener('click',()=>location.reload());
     endUI.appendChild(replayBtn);
   }
 }
 
-// Language switching
 languageSelect.addEventListener('change',(e)=>{
   currentLang = e.target.value;
   startBtn.textContent = currentLang==='en'?'START':currentLang==='zh'?'开始':'スタート';
@@ -269,11 +257,11 @@ languageSelect.addEventListener('change',(e)=>{
   if(currentPlayer<totalPlayers) showPlayer(currentPlayer);
 });
 
-// Start & How To Play
 startBtn.addEventListener('click', startGame);
-howToBtn.addEventListener('click',()=>{
-  window.open('howtoplay.html','_blank') || alert(howToPlay[currentLang]);
+howToBtn.addEventListener('click', ()=>{
+  window.open('howtoplay.html','_blank')||alert('Please view howtoplay.html for instructions.');
 });
 </script>
+
 </body>
 </html>
