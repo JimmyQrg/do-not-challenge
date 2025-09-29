@@ -1,90 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>How to Play - Do Not Challenge</title>
-  <link rel="icon" href="icon.png" type="image/png">
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Josefin Sans', sans-serif;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-      color: white;
-      text-align: center;
-    }
-    h1 {
-      margin-top: 40px;
-      font-size: 3em;
-      text-shadow: 0 0 10px #0ff, 0 0 20px #00f;
-    }
-    #langSelect {
-      position: absolute;
-      top: 15px;
-      right: 20px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      cursor: pointer;
-    }
-    #langSelect img {
-      width: 22px;
-      height: 22px;
-    }
-    #howContent {
-      max-width: 900px;
-      margin: 50px auto;
-      font-size: 1.2em;
-      line-height: 1.6em;
-      padding: 20px;
-      background: rgba(0,0,0,0.5);
-      border-radius: 15px;
-      text-align: left;
-      box-shadow: 0 0 20px rgba(0,255,255,0.3);
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HOW TO PLAY - DO NOT CHALLENGE</title>
+<link rel="icon" type="image/png" href="icon.png">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+  body {
+    margin:0;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    font-family: 'Press Start 2P', cursive;
+    color: #fff;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding: 20px;
+  }
+  #languageSelector {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    cursor:pointer;
+  }
+  #languageSelector img { width:32px; height:32px; }
+  h1 { margin-bottom:20px; }
+  p { max-width: 800px; font-size:16px; line-height:1.5em; white-space:pre-wrap; }
+</style>
 </head>
 <body>
-  <div id="langSelect">
-    <img src="https://img.icons8.com/ios-filled/50/ffffff/globe.png" alt="Globe">
-    <select id="languagePicker">
-      <option value="en">English</option>
-      <option value="zh">中文（简体）</option>
-      <option value="jp">日本語</option>
-    </select>
-  </div>
 
-  <h1 id="pageTitle">HOW TO PLAY</h1>
-  <div id="howContent"></div>
+<div id="languageSelector">
+  <img src="icon.png" alt="Globe">
+  <select id="languageSelect">
+    <option value="en">English</option>
+    <option value="zh">中文（简体）</option>
+    <option value="jp">日本語</option>
+  </select>
+</div>
 
-  <script src="cardInfo-howToPlay.js"></script>
-  <script>
-    const languagePicker = document.getElementById('languagePicker');
-    const howContent = document.getElementById('howContent');
-    const pageTitle = document.getElementById('pageTitle');
-    let currentLang = 'en';
+<h1 id="title">HOW TO PLAY</h1>
+<p id="instructions"></p>
 
-    function t(key){
-      return translations[currentLang][key] || key;
-    }
+<script src="cardInfo-howToPlay.js"></script>
+<script>
+let currentLang = 'en';
+const languageSelect = document.getElementById('languageSelect');
+const instructions = document.getElementById('instructions');
 
-    function updateContent() {
-      // Fallback if JS info missing
-      if(typeof howToPlay === 'undefined' || !howToPlay[currentLang]){
-        howContent.textContent = "No How To Play information available for this language.";
-        pageTitle.textContent = "HOW TO PLAY";
-        return;
-      }
-      howContent.textContent = howToPlay[currentLang];
-      pageTitle.textContent = t('how');
-    }
+function updateInstructions(){
+  if(typeof howToPlay[currentLang]!=='undefined'){
+    instructions.textContent = howToPlay[currentLang];
+  } else {
+    instructions.textContent = 'No information available in this language.';
+  }
+}
 
-    languagePicker.addEventListener('change', ()=>{
-      currentLang = languagePicker.value;
-      updateContent();
-    });
+// Initial load
+updateInstructions();
 
-    // Initialize
-    updateContent();
-  </script>
+// Language change
+languageSelect.addEventListener('change',(e)=>{
+  currentLang = e.target.value;
+  updateInstructions();
+});
+</script>
+
 </body>
 </html>
