@@ -6,107 +6,224 @@
 <title>DO NOT CHALLENGE</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
 <style>
-  body {
-    margin:0; font-family:'Press Start 2P', sans-serif;
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-    overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center;
-    height:100vh; color:white;
-  }
-  #header { display:flex; justify-content:space-between; width:90%; max-width:1200px; margin-top:10px; }
-  #header h1 { font-size:2rem; text-shadow:0 0 15px #fff; }
-  #languageSelect { font-size:1rem; padding:5px 10px; border-radius:8px; border:none; background:#444; color:white; cursor:pointer; }
-  #gameBoard { display:flex; flex-direction:column; align-items:center; margin-top:20px; }
-  .card { width:350px; height:200px; perspective:1000px; margin:20px; position:relative; }
-  .card-inner {
-    position:relative; width:100%; height:100%;
-    text-align:center; transition: transform 0.8s cubic-bezier(.4,.2,.2,1); transform-style:preserve-3d; cursor:pointer;
-  }
-  .card.flipped .card-inner { transform:rotateY(180deg); }
-  .card-front, .card-back {
-    position:absolute; width:100%; height:100%; backface-visibility:hidden; border-radius:15px;
-    display:flex; justify-content:center; align-items:center; padding:10px; box-shadow:0 5px 15px rgba(0,0,0,0.5);
-  }
-  .card-front { background:#555; color:white; transition: box-shadow 0.3s ease; }
-  .card-back { background:#00bfff; color:black; transform:rotateY(180deg); font-size:1rem; transition: box-shadow 0.3s ease; }
-  .card-back span { display:block; overflow:hidden; text-overflow:ellipsis; word-wrap:break-word; }
-  button {
-    background:#ff9800; color:black; font-size:1rem; font-weight:bold; padding:10px 20px; border:none; border-radius:12px;
-    margin:10px; cursor:pointer; box-shadow:0 5px 10px rgba(0,0,0,0.4); transition:0.2s;
-  }
-  button:hover { background:#ffc107; transform:scale(1.05); }
-  /* Glow + particle placeholder animations */
-  .glow { animation: glowPulse 1.5s infinite alternate; }
-  @keyframes glowPulse { 0%{box-shadow:0 0 20px #00f,0 0 30px #0ff;} 100%{box-shadow:0 0 40px #0ff,0 0 50px #00f;} }
+body {
+  margin:0; font-family:'Press Start 2P', sans-serif;
+  background:#0f2027; overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; color:white;
+}
+/* Starting Menu */
+#startMenu { position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:10; }
+#startMenu h1 { font-size:3rem; color:#fff; text-shadow:0 0 20px #0ff; animation: floatTitle 3s ease-in-out infinite alternate; }
+#startMenu button, #startMenu select { font-size:1.2rem; padding:12px 20px; border-radius:10px; margin:10px; cursor:pointer; transition: transform 0.5s ease; }
+
+/* Board & cards */
+#gameBoard { display:flex; flex-wrap:wrap; flex-direction:row; justify-content:center; align-items:center; margin-top:20px; position:relative; z-index:1; }
+.card { width:250px; height:150px; perspective:1000px; margin:15px; position:relative; cursor:pointer; }
+.card-inner { position:relative; width:100%; height:100%; text-align:center; transform-style:preserve-3d; transition: transform 0.8s cubic-bezier(.4,.2,.2,1);}
+.card.flipped .card-inner { transform:rotateY(180deg); }
+.card-front, .card-back { position:absolute; width:100%; height:100%; backface-visibility:hidden; border-radius:15px; display:flex; justify-content:center; align-items:center; padding:5px; box-shadow:0 5px 20px rgba(0,0,0,0.7); font-size:0.8rem; text-align:center; transition:0.3s;}
+.card-front { background:#555; color:white; }
+.card-back { background:#00bfff; color:black; transform:rotateY(180deg); }
+.card-back span { display:block; overflow:hidden; word-wrap:break-word; }
+
+/* Buttons */
+button { background:#ff9800; color:black; font-weight:bold; border:none; border-radius:12px; box-shadow:0 5px 15px rgba(0,0,0,0.5); }
+button:hover { background:#ffc107; transform:scale(1.05); }
+
+/* Glow & Animations */
+.glow { animation: glowPulse 1.5s infinite alternate; }
+@keyframes glowPulse { 0%{box-shadow:0 0 20px #00f,0 0 30px #0ff;} 100%{box-shadow:0 0 40px #0ff,0 0 50px #00f;} }
+@keyframes floatTitle { 0% { transform: translateY(0); } 50% { transform: translateY(-20px); } 100% { transform: translateY(0); } }
+
+/* Particle container */
+#particles { position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; }
 </style>
 </head>
 <body>
 
-<div id="header">
-  <h1>DO NOT CHALLENGE</h1>
-  <select id="languageSelect">
+<div id="particles"></div>
+
+<div id="startMenu">
+  <h1 id="startTitle">DO NOT CHALLENGE</h1>
+  <select id="languageSelectStart">
     <option value="en">English US</option>
     <option value="zh">中文</option>
     <option value="jp">日本語</option>
   </select>
+  <button id="startBtn">START GAME</button>
+  <button id="howBtn">HOW TO PLAY</button>
 </div>
 
-<div id="gameBoard">
-  <div class="card" id="playerCard">
-    <div class="card-inner">
-      <div class="card-front glow">???</div>
-      <div class="card-back"><span id="ruleText">DO NOT LOOK AT ELECTRONICS' SCREEN</span></div>
-    </div>
-  </div>
-  <button id="flipBtn">FLIP CARD</button>
-</div>
+<div id="gameBoard"></div>
+<button id="replayBtn" style="display:none;">REPLAY</button>
 
-<script src="https://cdn.jsdelivr.net/gh/JimmyQrg/do-not-challenge/cardInfo-howToPlay.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/JimmyQrg/do-not-challenge@main/cardInfo-howToPlay.js"></script>
 <script>
-const card = document.getElementById("playerCard");
-const cardInner = card.querySelector(".card-inner");
-const ruleText = document.getElementById("ruleText");
-const flipBtn = document.getElementById("flipBtn");
-
-// Flip card and auto-fit font
-flipBtn.addEventListener('click', flipCard);
-function flipCard() {
-  card.classList.toggle("flipped");
-  autoFitText();
+// -----------------------
+// Particle background
+// -----------------------
+const particleContainer = document.getElementById("particles");
+function createParticles(count){
+  for(let i=0;i<count;i++){
+    const p = document.createElement('div');
+    p.style.position='absolute'; p.style.width=p.style.height='4px'; p.style.background='rgba(255,255,255,0.2)';
+    p.style.borderRadius='50%'; p.style.top=Math.random()*100+'%'; p.style.left=Math.random()*100+'%';
+    p.style.animation=`float${i%5} ${5+Math.random()*5}s infinite alternate`;
+    particleContainer.appendChild(p);
+  }
 }
+const style = document.createElement('style');
+style.innerHTML=`
+@keyframes float0 {0%{transform:translateY(0);}100%{transform:translateY(-20px);}}
+@keyframes float1 {0%{transform:translateY(0);}100%{transform:translateY(-15px);}}
+@keyframes float2 {0%{transform:translateY(0);}100%{transform:translateY(-25px);}}
+@keyframes float3 {0%{transform:translateY(0);}100%{transform:translateY(-30px);}}
+@keyframes float4 {0%{transform:translateY(0);}100%{transform:translateY(-18px);}}
+`;
+document.head.appendChild(style);
+createParticles(50);
 
-// Auto-fit rule text
-function autoFitText() {
-  const parentHeight = cardInner.clientHeight;
-  const parentWidth = cardInner.clientWidth;
-  ruleText.style.fontSize = "1rem";
-  let fs = 16;
-  while ((ruleText.scrollHeight > parentHeight || ruleText.scrollWidth > parentWidth) && fs > 6) {
-    fs--;
-    ruleText.style.fontSize = fs + "px";
+// -----------------------
+// Game variables
+// -----------------------
+let cards=[], alive=[], numPlayers=6;
+const gameBoard = document.getElementById("gameBoard");
+const replayBtn = document.getElementById("replayBtn");
+
+// -----------------------
+// Starting menu animation freeze
+// -----------------------
+const startMenu = document.getElementById("startMenu");
+const startBtn = document.getElementById("startBtn");
+const howBtn = document.getElementById("howBtn");
+const langStart = document.getElementById("languageSelectStart");
+let menuFrozen=false;
+
+startMenu.addEventListener("mousemove", ()=>menuFrozen=true);
+startMenu.addEventListener("touchstart", ()=>menuFrozen=true);
+
+function animateMenu(){
+  if(!menuFrozen){
+    startBtn.style.transform = `translate(${Math.sin(Date.now()/300)*5}px,${Math.cos(Date.now()/500)*5}px)`;
+    howBtn.style.transform = `translate(${Math.cos(Date.now()/400)*5}px,${Math.sin(Date.now()/600)*5}px)`;
+  }
+  requestAnimationFrame(animateMenu);
+}
+animateMenu();
+
+// -----------------------
+// Start game & How to play
+// -----------------------
+startBtn.addEventListener("click", ()=>{
+  startMenu.style.display="none";
+  setupGame();
+});
+howBtn.addEventListener("click", ()=>{
+  alert("Game Rules:\nEach player gets a hidden rule. If they do it, they are eliminated. Last alive wins!");
+});
+
+// -----------------------
+// Language selection for game
+// -----------------------
+const langSelect = document.getElementById("languageSelectStart");
+langSelect.addEventListener('change', ()=>{
+  langValue = langSelect.value;
+});
+
+// -----------------------
+// Setup Game
+// -----------------------
+function setupGame(){
+  gameBoard.innerHTML=''; cards=[]; alive=[];
+  for(let i=0;i<numPlayers;i++){
+    const card = document.createElement("div"); card.className="card glow"; card.dataset.index=i; alive.push(true);
+    const inner = document.createElement("div"); inner.className="card-inner";
+    const front = document.createElement("div"); front.className="card-front"; front.textContent=i+1+"号玩家";
+    const back = document.createElement("div"); back.className="card-back";
+    const span = document.createElement("span");
+    span.textContent = cardInfo[Math.floor(Math.random()*cardInfo.length)];
+    back.appendChild(span);
+    inner.appendChild(front); inner.appendChild(back); card.appendChild(inner);
+    gameBoard.appendChild(card);
+    cards.push(card);
+
+    // Flip
+    card.addEventListener('click',()=>{ if(!card.classList.contains('flipped')) card.classList.add('flipped'); });
+    // Inspect
+    card.addEventListener('contextmenu', e=>{ e.preventDefault(); card.classList.toggle('flipped'); inspectionMode(card); });
+    let holdTimer=null;
+    card.addEventListener('touchstart',()=>{ holdTimer=setTimeout(()=>{card.classList.add('flipped'); inspectionMode(card);},500); });
+    card.addEventListener('touchend',()=>{ clearTimeout(holdTimer); });
+    // Kill
+    card.addEventListener('dblclick',()=>{
+      if(!card.classList.contains('flipped')) return;
+      card.style.background='red'; alive[i]=false;
+      card.querySelector('.card-back span').textContent='ELIMINATED';
+      checkEnd();
+      explodeEffect(card);
+    });
   }
 }
 
-// Glow + initial effects
-card.classList.add("glow");
+// -----------------------
+// Inspection Mode
+// -----------------------
+function inspectionMode(inspected){
+  cards.forEach(c=>{
+    if(c===inspected) c.style.background='#87CEFA';
+    else if(!c.style.background.includes('red')) c.style.background='#888';
+  });
+  inspected.addEventListener('transitionend', ()=>{
+    if(!inspected.classList.contains('flipped')){
+      cards.forEach((c,i)=>{ c.style.background = alive[i] ? '#555' : 'red'; });
+    }
+  }, {once:true});
+}
 
-// Language switching
-const langSelect = document.getElementById("languageSelect");
-langSelect.addEventListener("change", () => {
-  const val = langSelect.value;
-  if(val==='zh'){ ruleText.textContent = "不要看电子屏幕"; flipBtn.textContent="翻转卡牌";}
-  else if(val==='jp'){ ruleText.textContent = "電子機器の画面を見ないでください"; flipBtn.textContent="カードをめくる";}
-  else { ruleText.textContent = "DO NOT LOOK AT ELECTRONICS' SCREEN"; flipBtn.textContent="FLIP CARD";}
-});
+// -----------------------
+// End Game
+// -----------------------
+function checkEnd(){
+  const remaining = alive.filter(a=>a).length;
+  if(remaining===1){
+    const winnerIndex = alive.findIndex(a=>a);
+    cards[winnerIndex].style.background='green';
+    cards.forEach(card=>{ if(!card.classList.contains('flipped')) card.classList.add('flipped'); });
+    replayBtn.style.display='block';
+    victoryEffect(cards[winnerIndex]);
+  }
+}
 
-// Touchscreen hold flip simulation
-let touchTimer = null;
-card.addEventListener('touchstart', () => { touchTimer = setTimeout(flipCard, 500); });
-card.addEventListener('touchend', () => { clearTimeout(touchTimer); });
+// -----------------------
+// Replay
+// -----------------------
+replayBtn.addEventListener('click',()=>{ replayBtn.style.display='none'; setupGame(); });
 
-// Right-click flip for desktop
-card.addEventListener('contextmenu', e => { e.preventDefault(); flipCard(); });
-
+// -----------------------
+// Fancy Effects
+// -----------------------
+function explodeEffect(card){
+  for(let i=0;i<10;i++){
+    const part=document.createElement('div');
+    part.style.position='absolute'; part.style.width='6px'; part.style.height='6px';
+    part.style.background='orange'; part.style.borderRadius='50%';
+    part.style.left=Math.random()*100+'%'; part.style.top=Math.random()*100+'%';
+    part.style.transition='all 0.8s ease-out';
+    card.appendChild(part);
+    setTimeout(()=>{ part.style.transform=`translate(${Math.random()*100-50}px,${Math.random()*100-50}px) scale(0)`; part.style.opacity='0';},50);
+    setTimeout(()=>part.remove(),900);
+  }
+}
+function victoryEffect(card){
+  card.style.boxShadow='0 0 30px #0f0,0 0 50px #0f0';
+  setInterval(()=>{
+    const glow=document.createElement('div');
+    glow.style.position='absolute'; glow.style.width='10px'; glow.style.height='10px';
+    glow.style.borderRadius='50%'; glow.style.background='lime';
+    glow.style.left=Math.random()*100+'%'; glow.style.top=Math.random()*100+'%';
+    card.appendChild(glow);
+    setTimeout(()=>glow.remove(),800);
+  },200);
+}
 </script>
-
 </body>
 </html>
