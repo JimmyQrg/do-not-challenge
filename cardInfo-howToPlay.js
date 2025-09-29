@@ -37,36 +37,41 @@ const cardContents = [
 
 // HOW TO PLAY
 const howToPlay = {
-    en:`This game is called Do Not Challenge. Each player will have a card that contains an action they must NOT do.
-If they do the forbidden action, they are eliminated. The last remaining player wins.
+    // How to play / Game rules (very specific, well-organized)
+const cardHowToPlay = {
+  en: `Welcome to DO NOT CHALLENGE! Here is how to play the game step by step:
 
-Gameplay:
-1. Choose your language and number of players (minimum 2).
-2. Click START to begin. Each player will see their player number and a face-down card.
-3. Click the card to flip it. A random challenge will appear.
-4. After seeing the card, click CONTINUE to go to the next player.
-5. Once all cards are seen, the elimination phase begins. Click a player's box to mark them as eliminated.
-6. Repeat until only one player remains. The last player standing is the winner! Their box turns green and all player boxes reveal their card content.
-7. Click REPLAY to play again.`,
-    zh:`这个游戏叫做不要做挑战。每个人都会有一个不能做的事件，如果他做了，他就淘汰了。最后一个没被淘汰的人就赢了。
+1. Each player receives a secret rule at the beginning of the game. 
+2. Your rule may limit what you can say, do, or how you interact with others. 
+3. You are NOT allowed to see your own rule until you are eliminated. 
+4. If you break your rule at any point, you are immediately eliminated from the game. 
+5. You can observe other players carefully and may inspect their rules by right-clicking (or holding on touchscreen). 
+6. While inspecting, the inspected player’s card will flip and turn blue, others turn gray. Do not use this to break your own rule. 
+7. The game continues until only one player remains. That player becomes the winner. 
+8. Strategy, observation, self-control, and patience are crucial to avoid elimination and win. 
+Remember to stay alert, plan your moves, and anticipate other players’ actions to survive the challenge and win the game!`,
 
-玩法：
-1. 选择语言和玩家数量（至少2人）。
-2. 点击开始，每个玩家会看到自己的编号和一张背面卡牌。
-3. 点击卡牌翻牌，显示随机挑战。
-4. 翻牌后点击继续，轮到下一个玩家。
-5. 全部玩家看过卡牌后，开始淘汰阶段，点击玩家方块标记淘汰。
-6. 重复直到只剩一名玩家，最后幸存的玩家胜利，其方块变绿色，并显示所有玩家的卡牌内容。
-7. 点击再玩一局开始新游戏。`,
-    jp:`このゲームはドゥ・ノット・チャレンジです。各プレイヤーはやってはいけない行動が書かれたカードを持っています。
-もしそれを行うと脱落します。最後まで残ったプレイヤーが勝者です。
+  zh: `欢迎来到不要做挑战！游戏规则说明如下：
 
-ルール：
-1. 言語とプレイヤー人数を選択してください（最小2人）。
-2. スタートをクリック。各プレイヤーは自分の番号と裏向きのカードを見ることができます。
-3. カードをクリックしてめくるとランダムなチャレンジが表示されます。
-4. カードを見た後、CONTINUEをクリックして次のプレイヤーへ。
-5. 全員のカードを見たら、脱落フェーズ開始。プレイヤーのボックスをクリックして脱落させます。
-6. 最後に1人だけ残るまで繰り返します。最後のプレイヤーが勝利し、そのボックスは緑色に変わり、全員のカード内容が表示されます。
-7. REPLAYをクリックして再度プレイ。`
+1. 游戏开始时，每位玩家会获得一个秘密规则。  
+2. 规则可能限制你的言语、动作或与其他玩家的互动方式。  
+3. 你不能查看自己的规则，直到被淘汰。  
+4. 若违反自己的规则，即刻被淘汰出局。  
+5. 你可以仔细观察其他玩家，并通过右键点击（或触摸长按）查看他们的规则。  
+6. 查看时，被查看玩家的卡牌会翻面并变成蓝色，其他玩家变灰。请勿利用此功能违反自己的规则。  
+7. 游戏持续进行，直到只剩最后一位玩家，该玩家获胜。  
+8. 策略、观察力、自我控制和耐心对于避免被淘汰并赢得胜利至关重要。  
+请随时保持警觉，合理规划行动，预测其他玩家的行为，以在挑战中生存并获胜！`,
+
+  jp: `やってはいけないチャレンジへようこそ！ゲームのルールは以下の通りです：
+
+1. ゲーム開始時、各プレイヤーには秘密のルールが与えられます。  
+2. ルールは、発言、行動、または他のプレイヤーとの交流を制限する場合があります。  
+3. 自分のルールは脱落するまで確認できません。  
+4. ルールを破った場合、即座に脱落します。  
+5. 他のプレイヤーを注意深く観察し、右クリック（またはタッチ長押し）でルールを確認できます。  
+6. 確認中は、確認されたプレイヤーのカードが青に反転し、他のカードは灰色になります。この機能を使って自分のルールを破らないでください。  
+7. ゲームは最後の1人が残るまで続き、そのプレイヤーが勝者となります。  
+8. 戦略、観察力、自己制御、忍耐力が脱落を避け、勝利するために重要です。  
+常に注意を払い、行動を計画し、他のプレイヤーの動きを予測して、この挑戦で生き残りましょう！`
 };
