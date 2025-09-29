@@ -7,9 +7,48 @@
 <link rel="icon" href="https://raw.githubusercontent.com/JimmyQrg/do-not-challenge/main/icon.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
 <style>
-body {margin:0;font-family:'Press Start 2P',sans-serif;background:#0f2027;color:white;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;}
-#startMenu{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;transition:all 0.5s ease;}
-#startMenu h1{font-size:3rem;color:#0ff;text-shadow:0 0 20px #0ff;animation:floatTitle 3s ease-in-out infinite alternate;margin-bottom:40px;}
+body{
+  margin:0;
+  font-family:'Press Start 2P',sans-serif;
+  background:linear-gradient(120deg,#0f2027,#203a43);
+  color:white;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  height:100vh;
+}
+#startMenu{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  background:rgba(0,0,0,0.85);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:10;transition:all 0.5s ease;
+}
+#startMenu h1{
+  font-size:3rem;color:#0ff;text-shadow:0 0 20px #0ff;margin-bottom:40px;
+  animation:floatTitle 3s ease-in-out infinite alternate;
+}
+@keyframes floatTitle{0%{transform:translateY(0);}50%{transform:translateY(-20px);}100%{transform:translateY(0);}}
+button{
+  font-family:'Press Start 2P',sans-serif;font-size:1rem;font-weight:bold;
+  color:#fff;background: linear-gradient(145deg, #ff5722, #ff9800);
+  border:2px solid #fff;border-radius:12px;padding:15px 30px;margin:10px;
+  cursor:pointer;text-shadow:0 0 5px #000;
+  box-shadow:0 5px 15px rgba(255,152,0,0.6),0 0 20px rgba(255,87,34,0.5);
+  transition: all 0.3s ease;position: relative;overflow:hidden;
+}
+button:hover{
+  background: linear-gradient(145deg, #ff9800, #ffc107);
+  transform: scale(1.05) rotateZ(1deg);
+  box-shadow:0 5px 25px rgba(255,152,0,0.8),0 0 40px rgba(255,87,34,0.7);
+}
+button:active{transform: scale(0.95);box-shadow:0 3px 10px rgba(255,152,0,0.6),0 0 20px rgba(255,87,34,0.5);}
+button.glow{animation:buttonGlow 1.5s infinite alternate;}
+@keyframes buttonGlow{0%{box-shadow:0 5px 15px rgba(255,152,0,0.6),0 0 20px rgba(255,87,34,0.5);}100%{box-shadow:0 8px 25px rgba(255,152,0,0.9),0 0 40px rgba(255,87,34,0.8);}}
+#langContainer{position:absolute;top:20px;right:20px;display:flex;align-items:center;font-size:1rem;z-index:20;}
+#langContainer span{margin-right:8px;font-size:1.2rem;}
+select{font-size:1rem;padding:5px;border-radius:6px;}
 #gameBoard{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;margin-top:20px;position:relative;z-index:1;}
 .card{width:250px;height:150px;perspective:1000px;margin:15px;position:relative;cursor:pointer;}
 .card-inner{position:relative;width:100%;height:100%;text-align:center;transform-style:preserve-3d;transition:transform 0.8s cubic-bezier(.4,.2,.2,1);}
@@ -18,225 +57,60 @@ body {margin:0;font-family:'Press Start 2P',sans-serif;background:#0f2027;color:
 .card-front{background:#555;color:white;}
 .card-back{background:#00bfff;color:black;transform:rotateY(180deg);}
 .card-back span{display:block;overflow:hidden;word-wrap:break-word;}
-button{background:#ff9800;color:black;font-weight:bold;border:none;border-radius:12px;box-shadow:0 5px 15px rgba(0,0,0,0.5);}
-button:hover{background:#ffc107;transform:scale(1.05);}
-.glow{animation:glowPulse 1.5s infinite alternate;}
-@keyframes glowPulse{0%{box-shadow:0 0 20px #00f,0 0 30px #0ff;}100%{box-shadow:0 0 40px #0ff,0 0 50px #00f;}}
-@keyframes floatTitle{0%{transform:translateY(0);}50%{transform:translateY(-20px);}100%{transform:translateY(0);}}
 #particles{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}
-#langContainer{position:absolute;top:20px;right:20px;display:flex;align-items:center;font-size:1rem;z-index:20;}
-#langContainer span{margin-right:8px;font-size:1.2rem;}
-select{font-size:1rem;padding:5px;border-radius:6px;}
 #replayBtn{position:absolute;bottom:20px;display:none;}
 </style>
 </head>
 <body>
 <div id="particles"></div>
-
 <div id="startMenu">
   <h1 id="startTitle"></h1>
-  <div id="langContainer">
-    <span>🌐</span>
-    <select id="languageSelectStart"></select>
-  </div>
-  <button id="startBtn"></button>
-  <button id="howBtn"></button>
+  <div id="langContainer"><span>🌐</span><select id="languageSelectStart"></select></div>
+  <button id="startBtn" class="glow"></button>
+  <button id="howBtn" class="glow"></button>
 </div>
-
 <div id="gameBoard"></div>
-<button id="replayBtn"></button>
+<button id="replayBtn" class="glow"></button>
 
-<!-- Load card information and HowToPlay article from GitHub raw URL -->
 <script src="https://raw.githubusercontent.com/JimmyQrg/do-not-challenge/main/cardInfo-howToPlay.js"></script>
 <script>
-let numPlayers = 6, cards = [], alive = [];
-const gameBoard = document.getElementById("gameBoard");
-const replayBtn = document.getElementById("replayBtn");
-const startMenu = document.getElementById("startMenu");
-const startBtn = document.getElementById("startBtn");
-const howBtn = document.getElementById("howBtn");
-const startTitle = document.getElementById("startTitle");
-const langStart = document.getElementById("languageSelectStart");
-let currentLang = 'en';
+// --- Language Data ---
+const langData={en:{title:"DO NOT CHALLENGE",start:"START GAME",how:"HOW TO PLAY",replay:"REPLAY"},zh:{title:"不要做挑战",start:"开始游戏",how:"游戏规则",replay:"再玩一局"},jp:{title:"やってはいけないチャレンジ",start:"ゲーム開始",how:"遊び方",replay:"再挑戦"}};
+let currentLang='en';
+const startTitle=document.getElementById("startTitle");
+const startBtn=document.getElementById("startBtn");
+const howBtn=document.getElementById("howBtn");
+const langStart=document.getElementById("languageSelectStart");
+const replayBtn=document.getElementById("replayBtn");
+const gameBoard=document.getElementById("gameBoard");
+let cards=[],alive=[],numPlayers=6;
 
-// --- Menu Text ---
-const langData = {
-  en:{title:"DO NOT CHALLENGE",start:"START GAME",how:"HOW TO PLAY",replay:"REPLAY"},
-  zh:{title:"不要做挑战",start:"开始游戏",how:"游戏规则",replay:"再玩一局"},
-  jp:{title:"やってはいけないチャレンジ",start:"ゲーム開始",how:"遊び方",replay:"再挑戦"}
-};
-function updateStartMenuText(){
-  startTitle.textContent = langData[currentLang].title;
-  startBtn.textContent = langData[currentLang].start;
-  howBtn.textContent = langData[currentLang].how;
-  replayBtn.textContent = langData[currentLang].replay;
-}
-const languageOptions = [
-  {value:'en', text:'English'},
-  {value:'zh', text:'中文（简体)'},
-  {value:'jp', text:'日本語'}
-];
-languageOptions.forEach(opt=>{
-  const option = document.createElement('option');
-  option.value = opt.value;
-  option.textContent = opt.text;
-  langStart.appendChild(option);
-});
+function updateStartMenuText(){startTitle.textContent=langData[currentLang].title;startBtn.textContent=langData[currentLang].start;howBtn.textContent=langData[currentLang].how;replayBtn.textContent=langData[currentLang].replay;}
+const languageOptions=[{value:'en',text:'English'},{value:'zh',text:'中文（简体)'},{value:'jp',text:'日本語'}];
+languageOptions.forEach(opt=>{const o=document.createElement('option');o.value=opt.value;o.textContent=opt.text;langStart.appendChild(o);});
 updateStartMenuText();
+langStart.addEventListener('change',()=>{currentLang=langStart.value;updateStartMenuText();updateAllCardText();});
 
-// Language switch
-langStart.addEventListener('change',()=>{
-  currentLang = langStart.value;
-  updateStartMenuText();
-  updateAllCardText();
-});
-
-// --- Start / How / Replay ---
-startBtn.addEventListener('click', ()=>{
-  startMenu.style.display="none"; 
-  setupGame();
-});
-howBtn.addEventListener('click', ()=>{
-  const url = 'howtoplay.html?lang=' + currentLang;
-  try{
-    const win = window.open(url,'_blank');
-    if(!win) throw new Error('Cannot open How to Play page');
-  } catch(e){
-    alert(cardHowToPlay[currentLang]);
-  }
-});
-replayBtn.addEventListener('click', ()=>{replayBtn.style.display='none'; setupGame();});
-
-// --- Particle ---
+// --- Particles ---
 const particleContainer=document.getElementById("particles");
-function createParticles(count){
-  for(let i=0;i<count;i++){
-    const p=document.createElement('div');
-    p.style.position='absolute';
-    p.style.width=p.style.height='4px';
-    p.style.background='rgba(255,255,255,0.2)';
-    p.style.borderRadius='50%';
-    p.style.top=Math.random()*100+'%';
-    p.style.left=Math.random()*100+'%';
-    particleContainer.appendChild(p);
-  }
-}
+function createParticles(count){for(let i=0;i<count;i++){const p=document.createElement('div');p.style.position='absolute';p.style.width=p.style.height='4px';p.style.background='rgba(255,255,255,0.2)';p.style.borderRadius='50%';p.style.top=Math.random()*100+'%';p.style.left=Math.random()*100+'%';particleContainer.appendChild(p);}}
 createParticles(50);
 
-// --- Game Setup ---
-function setupGame(){
-  gameBoard.innerHTML=''; cards=[]; alive=[];
-  for(let i=0;i<numPlayers;i++){
-    const card=document.createElement("div");
-    card.className="card glow";
-    card.dataset.index=i;
-    alive.push(true);
-    const inner=document.createElement("div"); inner.className="card-inner";
-    const front=document.createElement("div"); front.className="card-front";
-    const back=document.createElement("div"); back.className="card-back";
-    const span=document.createElement("span");
-    front.textContent = (i+1)+"号玩家";
-    span.textContent = getRandomCardText(currentLang);
-    back.appendChild(span);
-    inner.appendChild(front);
-    inner.appendChild(back);
-    card.appendChild(inner);
-    gameBoard.appendChild(card);
-    cards.push(card);
+// --- Game Functions ---
+function setupGame(){gameBoard.innerHTML='';cards=[];alive=[];for(let i=0;i<numPlayers;i++){const card=document.createElement("div");card.className="card glow";card.dataset.index=i;alive.push(true);const inner=document.createElement("div");inner.className="card-inner";const front=document.createElement("div");front.className="card-front";const back=document.createElement("div");back.className="card-back";const span=document.createElement("span");front.textContent=(i+1)+"号玩家";span.textContent=getRandomCardText(currentLang);back.appendChild(span);inner.appendChild(front);inner.appendChild(back);card.appendChild(inner);gameBoard.appendChild(card);cards.push(card);card.addEventListener('click',()=>{card.classList.add('flipped');autoFitText(span);});card.addEventListener('contextmenu',e=>{e.preventDefault();card.classList.toggle('flipped');inspectionMode(card);autoFitText(span);});let holdTimer=null;card.addEventListener('touchstart',()=>{holdTimer=setTimeout(()=>{card.classList.add('flipped');inspectionMode(card);autoFitText(span);},500);});card.addEventListener('touchend',()=>{clearTimeout(holdTimer);});card.addEventListener('dblclick',()=>{if(!card.classList.contains('flipped')) return;card.style.background='red';alive[i]=false;card.querySelector('.card-back span').textContent='ELIMINATED';checkEnd();explodeEffect(card);});}}
 
-    // Click to flip
-    card.addEventListener('click',()=>{card.classList.add('flipped'); autoFitText(span);});
-    // Right click / hold inspection
-    card.addEventListener('contextmenu',e=>{e.preventDefault(); card.classList.toggle('flipped'); inspectionMode(card); autoFitText(span);});
-    let holdTimer=null;
-    card.addEventListener('touchstart',()=>{holdTimer=setTimeout(()=>{card.classList.add('flipped'); inspectionMode(card); autoFitText(span);},500);});
-    card.addEventListener('touchend',()=>{clearTimeout(holdTimer);});
-    // Double click = eliminate
-    card.addEventListener('dblclick',()=>{
-      if(!card.classList.contains('flipped')) return;
-      card.style.background='red'; alive[i]=false;
-      card.querySelector('.card-back span').textContent='ELIMINATED';
-      checkEnd(); explodeEffect(card);
-    });
-  }
-}
+function getRandomCardText(lang){if(lang==='zh')return cardInfoZH[Math.floor(Math.random()*cardInfoZH.length)];else if(lang==='jp')return cardInfoJP[Math.floor(Math.random()*cardInfoJP.length)];else return cardInfo[Math.floor(Math.random()*cardInfo.length)];}
+function updateAllCardText(){cards.forEach((card,i)=>{const front=card.querySelector('.card-front');const span=card.querySelector('.card-back span');front.textContent=(i+1)+"号玩家";span.textContent=getRandomCardText(currentLang);autoFitText(span);});}
+function autoFitText(span){span.style.fontSize='14px';while(span.scrollHeight>span.offsetHeight){span.style.fontSize=(parseInt(span.style.fontSize)-1)+'px';}}
+function inspectionMode(inspected){cards.forEach(c=>{if(c===inspected)c.style.background='#87CEFA';else if(!c.style.background.includes('red'))c.style.background='#888';});inspected.addEventListener('transitionend',()=>{if(!inspected.classList.contains('flipped')){cards.forEach((c,i)=>{c.style.background=alive[i]?'#555':'red';});}},{once:true});}
+function checkEnd(){const remaining=alive.filter(a=>a).length;if(remaining===1){const winnerIndex=alive.findIndex(a=>a);cards[winnerIndex].style.background='green';cards.forEach(card=>{if(!card.classList.contains('flipped'))card.classList.add('flipped');});replayBtn.style.display='block';victoryEffect(cards[winnerIndex]);}}
+function explodeEffect(card){for(let i=0;i<10;i++){const part=document.createElement('div');part.style.position='absolute';part.style.width='6px';part.style.height='6px';part.style.background='orange';part.style.borderRadius='50%';part.style.left=Math.random()*100+'%';part.style.top=Math.random()*100+'%';part.style.transition='all 0.8s ease-out';card.appendChild(part);setTimeout(()=>{part.style.transform=`translate(${Math.random()*100-50}px,${Math.random()*100-50}px) scale(0)`;part.style.opacity='0';},50);setTimeout(()=>part.remove(),900);}}
+function victoryEffect(card){card.style.boxShadow='0 0 30px #0f0,0 0 50px #0f0';setInterval(()=>{const glow=document.createElement('div');glow.style.position='absolute';glow.style.width='10px';glow.style.height='10px';glow.style.borderRadius='50%';glow.style.background='lime';glow.style.left=Math.random()*100+'%';glow.style.top=Math.random()*100+'%';card.appendChild(glow);setTimeout(()=>glow.remove(),800);},200);}
 
-// Auto-fit text for card back
-function autoFitText(span){
-  let fontSize=16;
-  span.style.fontSize = fontSize+'px';
-  while(span.scrollHeight>span.offsetHeight && fontSize>8){
-    fontSize--;
-    span.style.fontSize=fontSize+'px';
-  }
-}
-
-function getRandomCardText(lang){
-  if(lang==='zh') return cardInfoZH[Math.floor(Math.random()*cardInfoZH.length)];
-  else if(lang==='jp') return cardInfoJP[Math.floor(Math.random()*cardInfoJP.length)];
-  else return cardInfo[Math.floor(Math.random()*cardInfo.length)];
-}
-
-function updateAllCardText(){
-  cards.forEach((card,i)=>{
-    const front = card.querySelector('.card-front');
-    const span = card.querySelector('.card-back span');
-    front.textContent = (i+1) + "号玩家";
-    span.textContent = getRandomCardText(currentLang);
-    autoFitText(span);
-  });
-}
-
-// Inspection mode
-function inspectionMode(inspected){
-  cards.forEach(c=>{
-    if(c===inspected) c.style.background='#87CEFA';
-    else if(!c.style.background.includes('red')) c.style.background='#888';
-  });
-  inspected.addEventListener('transitionend',()=>{
-    if(!inspected.classList.contains('flipped')){
-      cards.forEach((c,i)=>{c.style.background = alive[i]? '#555':'red';});
-    }
-  },{once:true});
-}
-
-// Check end
-function checkEnd(){
-  const remaining=alive.filter(a=>a).length;
-  if(remaining===1){
-    const winnerIndex = alive.findIndex(a=>a);
-    cards[winnerIndex].style.background='green';
-    cards.forEach(card=>{if(!card.classList.contains('flipped')) card.classList.add('flipped');});
-    replayBtn.style.display='block';
-    victoryEffect(cards[winnerIndex]);
-  }
-}
-
-// Effects
-function explodeEffect(card){
-  for(let i=0;i<10;i++){
-    const part=document.createElement('div');
-    part.style.position='absolute'; part.style.width='6px'; part.style.height='6px';
-    part.style.background='orange'; part.style.borderRadius='50%';
-    part.style.left=Math.random()*100+'%'; part.style.top=Math.random()*100+'%';
-    part.style.transition='all 0.8s ease-out';
-    card.appendChild(part);
-    setTimeout(()=>{part.style.transform=`translate(${Math.random()*100-50}px,${Math.random()*100-50}px) scale(0)`; part.style.opacity='0';},50);
-    setTimeout(()=>part.remove(),900);
-  }
-}
-function victoryEffect(card){
-  card.style.boxShadow='0 0 30px #0f0,0 0 50px #0f0';
-  setInterval(()=>{
-    const glow=document.createElement('div');
-    glow.style.position='absolute';
-    glow.style.width='10px'; glow.style.height='10px'; glow.style.borderRadius='50%';
-    glow.style.background='lime';
-    glow.style.left=Math.random()*100+'%'; glow.style.top=Math.random()*100+'%';
-    card.appendChild(glow);
-    setTimeout(()=>glow.remove(),800);
-  },200);
-}
+// --- Start button ---
+startBtn.addEventListener('click',()=>{document.getElementById("startMenu").style.display='none';setupGame();});
+howBtn.addEventListener('click',()=>{window.open('howtoplay.html?lang='+currentLang,'_blank')});
+replayBtn.addEventListener('click',()=>{replayBtn.style.display='none';setupGame();});
 </script>
 </body>
 </html>
