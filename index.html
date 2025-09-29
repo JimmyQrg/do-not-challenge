@@ -9,125 +9,123 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 body {
-  margin: 0;
-  overflow: hidden;
-  font-family: 'Press Start 2P', cursive;
-  color: #fff;
+  margin:0;
+  overflow:hidden;
+  font-family:'Press Start 2P', cursive;
   background: url('background.png') no-repeat center center fixed;
   background-size: cover;
+  color:#fff;
 }
 
-/* UI and buttons */
+/* UI containers */
 #startUI, #gameUI, #endUI {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  transition: opacity 0.5s ease;
+  position:absolute;
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:20px;
+  transition:opacity 0.5s ease;
 }
+
+/* Buttons */
 button {
-  font-family: 'Press Start 2P', cursive;
-  font-size: 18px;
-  padding: 12px 20px;
-  background: #222;
-  border: 2px solid #fff;
-  border-radius: 8px;
-  color: #fff;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  font-family:'Press Start 2P', cursive;
+  font-size:16px;
+  padding:12px 20px;
+  background: linear-gradient(45deg,#222,#555);
+  border: 2px solid #0ff;
+  border-radius:10px;
+  color:#fff;
+  cursor:pointer;
+  transition: all 0.3s ease;
 }
 button:hover {
-  background: #fff;
-  color: #222;
-  transform: scale(1.05);
-  box-shadow: 0 0 15px #0ff, 0 0 25px #0ff inset;
+  background:#0ff;
+  color:#222;
+  transform:scale(1.05);
+  box-shadow:0 0 15px #0ff,0 0 25px #0ff inset;
+}
+
+/* Fancy selector */
+select,input[type=number] {
+  font-family:'Press Start 2P', cursive;
+  font-size:16px;
+  padding:8px 12px;
+  border-radius:8px;
+  border:2px solid #0ff;
+  background: linear-gradient(45deg,#111,#333);
+  color:#fff;
+  cursor:pointer;
+  outline:none;
+}
+select:hover,input[type=number]:hover {
+  background:#0ff;
+  color:#222;
 }
 
 /* Language selector */
 #languageSelector {
-  position: absolute;
-  top: 10px;
-  right: 10px;
+  position:absolute;
+  top:10px;
+  right:10px;
   display:flex;
   align-items:center;
   gap:8px;
-  cursor:pointer;
 }
-#languageSelector img { width:32px; height:32px; }
+#languageSelector img { width:32px;height:32px; cursor:pointer; }
 
 /* Player card */
 #playerCard {
-  width: 400px;
-  height: 200px;
-  perspective: 1000px;
-  cursor: pointer;
+  width:400px; height:200px; perspective:1000px; cursor:pointer;
 }
 .card-inner {
-  width: 100%;
-  height: 100%;
+  width:100%; height:100%;
   transition: transform 0.8s;
   transform-style: preserve-3d;
-  position: relative;
+  position:relative;
 }
-.card-inner.flipped { transform: rotateY(180deg); }
+.card-inner.flipped { transform: rotateY(180deg);}
 .card-front, .card-back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  display:flex;
-  align-items: center;
-  justify-content: center;
-  border: 3px solid #fff;
-  border-radius: 12px;
-  font-size: 16px;
-  text-align: center;
-  padding: 20px;
-  box-sizing: border-box;
+  position:absolute; width:100%; height:100%;
+  backface-visibility:hidden;
+  display:flex; align-items:center; justify-content:center;
+  border:3px solid #0ff; border-radius:12px;
+  font-size:16px; text-align:center; padding:20px; box-sizing:border-box;
 }
-.card-front { background: #333; }
-.card-back { 
-  background: #111;
-  transform: rotateY(180deg);
-  font-size: 18px;
-}
+.card-front { background:#333;}
+.card-back { background:#111; transform:rotateY(180deg); font-size:18px; }
 
-#continueBtn { display:none; }
-
-/* End UI */
+/* End UI player boxes in matrix/grid */
 #endUI {
   flex-wrap: wrap;
-  gap: 15px;
-  padding: 20px;
-  justify-content: center;
-  align-content: flex-start;
-  overflow-y: auto;
+  gap:15px;
+  padding:20px;
+  justify-content:center;
+  align-content:flex-start;
+  overflow-y:auto;
+  display:flex;
 }
 .playerBox {
-  width: 100px;
-  height: 100px;
-  background: #444;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:14px;
-  border:2px solid #fff;
-  cursor:pointer;
-  transition: all 0.3s ease;
+  width:100px; height:100px; background:#444;
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; border:2px solid #0ff;
+  cursor:pointer; transition: all 0.3s ease;
 }
 .playerBox.dead { background:red; }
 .playerBox.winner { background:green; }
+
+/* Card glow effect */
+.card-inner.flipped { box-shadow: 0 0 20px #0ff, 0 0 50px #0ff inset; }
 </style>
 </head>
 <body>
 
 <!-- Language Selector -->
 <div id="languageSelector">
-  <img src="globe.png" alt="Globe">
+  <img src="icon.png" alt="Globe">
   <select id="languageSelect">
     <option value="en">English</option>
     <option value="zh">中文（简体）</option>
@@ -163,37 +161,37 @@ button:hover {
 
 <script src="cardInfo-howToPlay.js"></script>
 <script>
-let currentLang = 'en';
-let totalPlayers = 2;
-let currentPlayer = 0;
-let playerRules = [];
-let playerStates = [];
-let viewingCard = null; // Track right-click view
+let currentLang='en';
+let totalPlayers=2;
+let currentPlayer=0;
+let playerRules=[];
+let playerStates=[];
+let viewingCard=null;
 
-const startUI = document.getElementById('startUI');
-const gameUI = document.getElementById('gameUI');
-const endUI = document.getElementById('endUI');
+const startUI=document.getElementById('startUI');
+const gameUI=document.getElementById('gameUI');
+const endUI=document.getElementById('endUI');
 
-const startBtn = document.getElementById('startBtn');
-const howToBtn = document.getElementById('howToBtn');
-const playerCountInput = document.getElementById('playerCount');
+const startBtn=document.getElementById('startBtn');
+const howToBtn=document.getElementById('howToBtn');
+const playerCountInput=document.getElementById('playerCount');
 
-const playerLabel = document.getElementById('playerLabel');
-const playerCardInner = document.querySelector('.card-inner');
-const cardBackText = document.querySelector('.card-back span');
-const continueBtn = document.getElementById('continueBtn');
+const playerLabel=document.getElementById('playerLabel');
+const playerCardInner=document.querySelector('.card-inner');
+const cardBackText=document.querySelector('.card-back span');
+const continueBtn=document.getElementById('continueBtn');
 
-const languageSelect = document.getElementById('languageSelect');
+const languageSelect=document.getElementById('languageSelect');
 
-function shuffle(array){ return array.sort(()=>Math.random()-0.5); }
+function shuffle(array){return array.sort(()=>Math.random()-0.5);}
 
 function startGame(){
-  totalPlayers = Number(playerCountInput.value);
-  currentPlayer = 0;
-  playerRules = [];
-  playerStates = Array(totalPlayers).fill('alive');
-  const shuffledRules = shuffle([...cardData]);
-  for(let i=0;i<totalPlayers;i++){ playerRules.push(shuffledRules[i % shuffledRules.length]); }
+  totalPlayers=Number(playerCountInput.value);
+  currentPlayer=0;
+  playerRules=[];
+  playerStates=Array(totalPlayers).fill('alive');
+  const shuffledRules=shuffle([...cardData]);
+  for(let i=0;i<totalPlayers;i++){playerRules.push(shuffledRules[i%shuffledRules.length]);}
   startUI.style.opacity=0;
   startUI.style.pointerEvents='none';
   gameUI.style.opacity=1;
@@ -202,43 +200,41 @@ function startGame(){
 }
 
 function showPlayer(index){
-  playerLabel.textContent = currentLang==='en'?`Player ${index+1}`:currentLang==='zh'?`${index+1}号玩家`:`プレイヤー${index+1}`;
+  playerLabel.textContent=currentLang==='en'?`Player ${index+1}`:currentLang==='zh'?`${index+1}号玩家`:`プレイヤー${index+1}`;
   playerCardInner.classList.remove('flipped');
   cardBackText.textContent='';
   continueBtn.style.display='none';
-  viewingCard = null;
+  viewingCard=null;
 }
 
-// Left-click reveal
 playerCardInner.addEventListener('click',()=>{
-  if(viewingCard === currentPlayer) return; // disable if viewing
-  if(playerCardInner.classList.contains('flipped')) return;
+  if(viewingCard===currentPlayer)return;
+  if(playerCardInner.classList.contains('flipped'))return;
   playerCardInner.classList.add('flipped');
-  const rule = playerRules[currentPlayer][currentLang];
-  cardBackText.textContent = rule;
+  const rule=playerRules[currentPlayer][currentLang];
+  cardBackText.textContent=rule;
   continueBtn.style.display='inline-block';
 });
 
-// Right-click view
-playerCardInner.addEventListener('contextmenu', (e) => {
+playerCardInner.addEventListener('contextmenu',(e)=>{
   e.preventDefault();
-  if(viewingCard === currentPlayer){
+  if(viewingCard===currentPlayer){
     playerCardInner.classList.remove('flipped');
-    cardBackText.textContent = '';
-    playerLabel.textContent = currentLang==='en'?`Player ${currentPlayer+1}`:currentLang==='zh'?`${currentPlayer+1}号玩家`:`プレイヤー${currentPlayer+1}`;
-    viewingCard = null;
+    cardBackText.textContent='';
+    playerLabel.textContent=currentLang==='en'?`Player ${currentPlayer+1}`:currentLang==='zh'?`${currentPlayer+1}号玩家`:`プレイヤー${currentPlayer+1}`;
+    viewingCard=null;
     return;
   }
   playerCardInner.classList.add('flipped');
-  const rule = playerRules[currentPlayer][currentLang];
-  cardBackText.textContent = rule;
-  playerLabel.textContent = currentLang==='en'?`Viewing Player ${currentPlayer+1}'s Rule`:currentLang==='zh'?`查看 ${currentPlayer+1}号玩家的规则`:`プレイヤー${currentPlayer+1}のルールを表示中`;
-  viewingCard = currentPlayer;
+  const rule=playerRules[currentPlayer][currentLang];
+  cardBackText.textContent=rule;
+  playerLabel.textContent=currentLang==='en'?`Viewing Player ${currentPlayer+1}'s Rule`:currentLang==='zh'?`查看 ${currentPlayer+1}号玩家的规则`:`プレイヤー${currentPlayer+1}のルールを表示中`;
+  viewingCard=currentPlayer;
 });
 
 continueBtn.addEventListener('click',()=>{
   currentPlayer++;
-  if(currentPlayer>=totalPlayers){ endGame(); } else { showPlayer(currentPlayer); }
+  if(currentPlayer>=totalPlayers){ endGame(); }else{ showPlayer(currentPlayer); }
 });
 
 function endGame(){
@@ -252,8 +248,10 @@ function endGame(){
     box.classList.add('playerBox');
     box.textContent=i+1;
     box.addEventListener('click',()=>{
-      if(box.classList.contains('dead')) return;
+      if(box.classList.contains('dead'))return;
       box.classList.add('dead');
+      box.style.transform='scale(1.1)';
+      setTimeout(()=>box.style.transform='scale(1)',100);
       checkWinner();
     });
     endUI.appendChild(box);
@@ -261,33 +259,28 @@ function endGame(){
 }
 
 function checkWinner(){
-  const alive = Array.from(document.querySelectorAll('.playerBox')).filter(b=>!b.classList.contains('dead'));
+  const alive=Array.from(document.querySelectorAll('.playerBox')).filter(b=>!b.classList.contains('dead'));
   if(alive.length===1){
-    const winnerBox = alive[0];
+    const winnerBox=alive[0];
     winnerBox.classList.add('winner');
-    const boxes = document.querySelectorAll('.playerBox');
-    boxes.forEach((b,i)=>{ b.textContent = playerRules[i][currentLang]; });
+    const boxes=document.querySelectorAll('.playerBox');
+    boxes.forEach((b,i)=>{ b.textContent=playerRules[i][currentLang]; });
     const replayBtn=document.createElement('button');
-    replayBtn.textContent = currentLang==='en'?'REPLAY':currentLang==='zh'?'再玩一局':'リプレイ';
+    replayBtn.textContent=currentLang==='en'?'REPLAY':currentLang==='zh'?'再玩一局':'リプレイ';
     replayBtn.addEventListener('click',()=>location.reload());
     endUI.appendChild(replayBtn);
   }
 }
 
-// Language selector
 languageSelect.addEventListener('change',(e)=>{
-  currentLang = e.target.value;
-  startBtn.textContent = currentLang==='en'?'START':currentLang==='zh'?'开始':'スタート';
-  howToBtn.textContent = currentLang==='en'?'HOW TO PLAY':currentLang==='zh'?'游戏规则':'遊び方';
+  currentLang=e.target.value;
+  startBtn.textContent=currentLang==='en'?'START':currentLang==='zh'?'开始':'スタート';
+  howToBtn.textContent=currentLang==='en'?'HOW TO PLAY':currentLang==='zh'?'游戏规则':'遊び方';
   if(currentPlayer<totalPlayers) showPlayer(currentPlayer);
 });
 
-// Start and HowTo buttons
-startBtn.addEventListener('click', startGame);
-howToBtn.addEventListener('click', ()=>{
-  window.open('howtoplay.html','_blank') || alert('Please view howtoplay.html for instructions.');
-});
+startBtn.addEventListener('click',startGame);
+howToBtn.addEventListener('click',()=>{ window.open('howtoplay.html','_blank')||alert('Please view howtoplay.html for instructions.'); });
 </script>
-
 </body>
 </html>
