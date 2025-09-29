@@ -3,71 +3,110 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Do Not Challenge</title>
-<link rel="icon" type="image/png" href="icon.png">
+<title>DO NOT CHALLENGE</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
 <style>
-body { margin:0; font-family:Arial Black, sans-serif; background:#111; color:#fff; display:flex; flex-direction:column; align-items:center; }
-.topBar { width:90%; max-width:600px; display:flex; justify-content:flex-end; margin:10px 0; }
-.container { width:90%; max-width:600px; text-align:center; }
-select, button, input { padding:10px 15px; margin:5px; font-size:16px; border-radius:8px; border:none; cursor:pointer; }
-button { background:#ff5722; color:#fff; font-weight:bold; }
-.card { width:100%; height:150px; background:#222; border-radius:15px; display:flex; align-items:center; justify-content:center; font-size:20px; margin-top:20px; cursor:pointer; transition:.3s; user-select:none; }
-.card.flipped { background:#444; }
-.playerGrid { display:grid; grid-template-columns:repeat(auto-fit, minmax(50px,1fr)); gap:10px; margin-top:20px; }
-.playerBox { width:50px; height:50px; background:#555; display:flex; align-items:center; justify-content:center; font-weight:bold; cursor:pointer; border-radius:5px; transition:.3s; }
-.playerBox.dead { background:red; }
-.playerBox.winner { background:green; }
-.contentArea { margin-top:20px; }
+  body {
+    margin:0; font-family:'Press Start 2P', sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    height:100vh; color:white;
+  }
+  #header { display:flex; justify-content:space-between; width:90%; max-width:1200px; margin-top:10px; }
+  #header h1 { font-size:2rem; text-shadow:0 0 15px #fff; }
+  #languageSelect { font-size:1rem; padding:5px 10px; border-radius:8px; border:none; background:#444; color:white; cursor:pointer; }
+  #gameBoard { display:flex; flex-direction:column; align-items:center; margin-top:20px; }
+  .card { width:350px; height:200px; perspective:1000px; margin:20px; position:relative; }
+  .card-inner {
+    position:relative; width:100%; height:100%;
+    text-align:center; transition: transform 0.8s cubic-bezier(.4,.2,.2,1); transform-style:preserve-3d; cursor:pointer;
+  }
+  .card.flipped .card-inner { transform:rotateY(180deg); }
+  .card-front, .card-back {
+    position:absolute; width:100%; height:100%; backface-visibility:hidden; border-radius:15px;
+    display:flex; justify-content:center; align-items:center; padding:10px; box-shadow:0 5px 15px rgba(0,0,0,0.5);
+  }
+  .card-front { background:#555; color:white; transition: box-shadow 0.3s ease; }
+  .card-back { background:#00bfff; color:black; transform:rotateY(180deg); font-size:1rem; transition: box-shadow 0.3s ease; }
+  .card-back span { display:block; overflow:hidden; text-overflow:ellipsis; word-wrap:break-word; }
+  button {
+    background:#ff9800; color:black; font-size:1rem; font-weight:bold; padding:10px 20px; border:none; border-radius:12px;
+    margin:10px; cursor:pointer; box-shadow:0 5px 10px rgba(0,0,0,0.4); transition:0.2s;
+  }
+  button:hover { background:#ffc107; transform:scale(1.05); }
+  /* Glow + particle placeholder animations */
+  .glow { animation: glowPulse 1.5s infinite alternate; }
+  @keyframes glowPulse { 0%{box-shadow:0 0 20px #00f,0 0 30px #0ff;} 100%{box-shadow:0 0 40px #0ff,0 0 50px #00f;} }
 </style>
 </head>
 <body>
 
-<div class="topBar">
-    <label for="languageSelectTop">Language:</label>
-    <select id="languageSelectTop">
-        <option value="en">English US</option>
-        <option value="zh">中文</option>
-        <option value="jp">日本語</option>
-    </select>
+<div id="header">
+  <h1>DO NOT CHALLENGE</h1>
+  <select id="languageSelect">
+    <option value="en">English US</option>
+    <option value="zh">中文</option>
+    <option value="jp">日本語</option>
+  </select>
 </div>
 
-<div class="container" id="mainMenu">
-    <h1 id="title">Do Not Challenge</h1>
-    <div>
-        <button id="startGame">START</button>
-        <button id="howToPlayBtn">HOW TO PLAY</button>
+<div id="gameBoard">
+  <div class="card" id="playerCard">
+    <div class="card-inner">
+      <div class="card-front glow">???</div>
+      <div class="card-back"><span id="ruleText">DO NOT LOOK AT ELECTRONICS' SCREEN</span></div>
     </div>
+  </div>
+  <button id="flipBtn">FLIP CARD</button>
 </div>
 
-<div class="container" id="howToPlay" style="display:none;">
-    <h2 id="howTitle">How to Play</h2>
-    <p id="howText"></p>
-    <button id="backBtn">BACK</button>
-</div>
+<script src="https://cdn.jsdelivr.net/gh/JimmyQrg/do-not-challenge/cardInfo-howToPlay.js"></script>
+<script>
+const card = document.getElementById("playerCard");
+const cardInner = card.querySelector(".card-inner");
+const ruleText = document.getElementById("ruleText");
+const flipBtn = document.getElementById("flipBtn");
 
-<div class="container" id="playerSetup" style="display:none;">
-    <label for="playerCount" id="playerCountLabel">Number of Players:</label>
-    <input type="number" id="playerCount" min="2" value="2">
-    <button id="beginGameBtn">BEGIN</button>
-</div>
+// Flip card and auto-fit font
+flipBtn.addEventListener('click', flipCard);
+function flipCard() {
+  card.classList.toggle("flipped");
+  autoFitText();
+}
 
-<div class="container" id="gameArea" style="display:none;">
-    <div id="currentPlayer"></div>
-    <div class="card" id="cardDisplay"></div>
-    <div class="contentArea">
-        <button id="continueBtn" style="display:none;">CONTINUE</button>
-    </div>
-</div>
+// Auto-fit rule text
+function autoFitText() {
+  const parentHeight = cardInner.clientHeight;
+  const parentWidth = cardInner.clientWidth;
+  ruleText.style.fontSize = "1rem";
+  let fs = 16;
+  while ((ruleText.scrollHeight > parentHeight || ruleText.scrollWidth > parentWidth) && fs > 6) {
+    fs--;
+    ruleText.style.fontSize = fs + "px";
+  }
+}
 
-<div class="container" id="eliminationArea" style="display:none;">
-    <h2 id="eliminationTitle">Click Player to Confirm Death</h2>
-    <div class="playerGrid" id="playerGrid"></div>
-    <div class="contentArea">
-        <button id="replayBtn" style="display:none;">REPLAY</button>
-    </div>
-</div>
+// Glow + initial effects
+card.classList.add("glow");
 
-<script src="cardInfo-howToPlay.js"></script>
-<script src="script.js"></script>
+// Language switching
+const langSelect = document.getElementById("languageSelect");
+langSelect.addEventListener("change", () => {
+  const val = langSelect.value;
+  if(val==='zh'){ ruleText.textContent = "不要看电子屏幕"; flipBtn.textContent="翻转卡牌";}
+  else if(val==='jp'){ ruleText.textContent = "電子機器の画面を見ないでください"; flipBtn.textContent="カードをめくる";}
+  else { ruleText.textContent = "DO NOT LOOK AT ELECTRONICS' SCREEN"; flipBtn.textContent="FLIP CARD";}
+});
+
+// Touchscreen hold flip simulation
+let touchTimer = null;
+card.addEventListener('touchstart', () => { touchTimer = setTimeout(flipCard, 500); });
+card.addEventListener('touchend', () => { clearTimeout(touchTimer); });
+
+// Right-click flip for desktop
+card.addEventListener('contextmenu', e => { e.preventDefault(); flipCard(); });
+
+</script>
+
 </body>
 </html>
