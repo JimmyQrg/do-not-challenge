@@ -29,7 +29,7 @@ body{
   font-size:3rem;color:#0ff;text-shadow:0 0 20px #0ff;margin-bottom:40px;
   animation:floatTitle 3s ease-in-out infinite alternate;
 }
-@keyframes floatTitle{0%{transform:translateY(0);}50%{transform:translateY(-20px);}100%{transform:translateY(0);}}
+@keyframes floatTitle{0%{transform:translateY(0);}50%{transform:translateY:-20px;}100%{transform:translateY(0);}}
 button{
   font-family:'Press Start 2P',sans-serif;font-size:1rem;font-weight:bold;
   color:#fff;background: linear-gradient(145deg, #ff5722, #ff9800);
@@ -97,17 +97,82 @@ function createParticles(count){for(let i=0;i<count;i++){const p=document.create
 createParticles(50);
 
 // --- Game Functions ---
-function setupGame(){gameBoard.innerHTML='';cards=[];alive=[];for(let i=0;i<numPlayers;i++){const card=document.createElement("div");card.className="card glow";card.dataset.index=i;alive.push(true);const inner=document.createElement("div");inner.className="card-inner";const front=document.createElement("div");front.className="card-front";const back=document.createElement("div");back.className="card-back";const span=document.createElement("span");front.textContent=(i+1)+"号玩家";span.textContent=getRandomCardText(currentLang);back.appendChild(span);inner.appendChild(front);inner.appendChild(back);card.appendChild(inner);gameBoard.appendChild(card);cards.push(card);card.addEventListener('click',()=>{card.classList.add('flipped');autoFitText(span);});card.addEventListener('contextmenu',e=>{e.preventDefault();card.classList.toggle('flipped');inspectionMode(card);autoFitText(span);});let holdTimer=null;card.addEventListener('touchstart',()=>{holdTimer=setTimeout(()=>{card.classList.add('flipped');inspectionMode(card);autoFitText(span);},500);});card.addEventListener('touchend',()=>{clearTimeout(holdTimer);});card.addEventListener('dblclick',()=>{if(!card.classList.contains('flipped')) return;card.style.background='red';alive[i]=false;card.querySelector('.card-back span').textContent='ELIMINATED';checkEnd();explodeEffect(card);});}}
+function setupGame(){
+  gameBoard.innerHTML='';cards=[];alive=[];
+  for(let i=0;i<numPlayers;i++){
+    const card=document.createElement("div");card.className="card glow";card.dataset.index=i;alive.push(true);
+    const inner=document.createElement("div");inner.className="card-inner";
+    const front=document.createElement("div");front.className="card-front";front.textContent=(i+1)+"号玩家";
+    const back=document.createElement("div");back.className="card-back";const span=document.createElement("span");span.textContent=getRandomCardText(currentLang);back.appendChild(span);
+    inner.appendChild(front);inner.appendChild(back);card.appendChild(inner);gameBoard.appendChild(card);cards.push(card);
+
+    // Left-click: kill
+    card.addEventListener('click',(e)=>{if(!card.classList.contains('inspecting')){killPlayer(i);}});
+    // Right-click or long press: inspect
+    card.addEventListener('contextmenu',(e)=>{e.preventDefault();inspectPlayer(card);});
+    card.addEventListener('touchstart',(e)=>{card.touchTimer=setTimeout(()=>inspectPlayer(card),500);});
+    card.addEventListener('touchend',(e)=>{clearTimeout(card.touchTimer);if(card.classList.contains('inspecting')){uninspectPlayer(card);}});
+
+    card.addEventListener('mouseover',()=>{card.style.transform='scale(1.05)';});
+    card.addEventListener('mouseout',()=>{card.style.transform='scale(1)';});
+  }
+}
 
 function getRandomCardText(lang){if(lang==='zh')return cardInfoZH[Math.floor(Math.random()*cardInfoZH.length)];else if(lang==='jp')return cardInfoJP[Math.floor(Math.random()*cardInfoJP.length)];else return cardInfo[Math.floor(Math.random()*cardInfo.length)];}
-function updateAllCardText(){cards.forEach((card,i)=>{const front=card.querySelector('.card-front');const span=card.querySelector('.card-back span');front.textContent=(i+1)+"号玩家";span.textContent=getRandomCardText(currentLang);autoFitText(span);});}
-function autoFitText(span){span.style.fontSize='14px';while(span.scrollHeight>span.offsetHeight){span.style.fontSize=(parseInt(span.style.fontSize)-1)+'px';}}
-function inspectionMode(inspected){cards.forEach(c=>{if(c===inspected)c.style.background='#87CEFA';else if(!c.style.background.includes('red'))c.style.background='#888';});inspected.addEventListener('transitionend',()=>{if(!inspected.classList.contains('flipped')){cards.forEach((c,i)=>{c.style.background=alive[i]?'#555':'red';});}},{once:true});}
-function checkEnd(){const remaining=alive.filter(a=>a).length;if(remaining===1){const winnerIndex=alive.findIndex(a=>a);cards[winnerIndex].style.background='green';cards.forEach(card=>{if(!card.classList.contains('flipped'))card.classList.add('flipped');});replayBtn.style.display='block';victoryEffect(cards[winnerIndex]);}}
-function explodeEffect(card){for(let i=0;i<10;i++){const part=document.createElement('div');part.style.position='absolute';part.style.width='6px';part.style.height='6px';part.style.background='orange';part.style.borderRadius='50%';part.style.left=Math.random()*100+'%';part.style.top=Math.random()*100+'%';part.style.transition='all 0.8s ease-out';card.appendChild(part);setTimeout(()=>{part.style.transform=`translate(${Math.random()*100-50}px,${Math.random()*100-50}px) scale(0)`;part.style.opacity='0';},50);setTimeout(()=>part.remove(),900);}}
-function victoryEffect(card){card.style.boxShadow='0 0 30px #0f0,0 0 50px #0f0';setInterval(()=>{const glow=document.createElement('div');glow.style.position='absolute';glow.style.width='10px';glow.style.height='10px';glow.style.borderRadius='50%';glow.style.background='lime';glow.style.left=Math.random()*100+'%';glow.style.top=Math.random()*100+'%';card.appendChild(glow);setTimeout(()=>glow.remove(),800);},200);}
 
-// --- Start button ---
+function updateAllCardText(){cards.forEach((card,i)=>{const front=card.querySelector('.card-front');const span=card.querySelector('.card-back span');front.textContent=(i+1)+"号玩家";span.textContent=getRandomCardText(currentLang);autoFitText(span);});}
+function autoFitText(span){span.style.fontSize='14px';while(span.scrollHeight>span.offsetHeight && parseInt(span.style.fontSize)>6){span.style.fontSize=(parseInt(span.style.fontSize)-1)+'px';}}
+
+function killPlayer(index){
+  if(!alive[index])return;
+  alive[index]=false;
+  const card=cards[index];
+  card.style.background='red';
+  explodeEffect(card);
+  checkEnd();
+}
+
+function explodeEffect(card){
+  for(let i=0;i<15;i++){
+    const part=document.createElement('div');
+    part.style.position='absolute';
+    part.style.width=8+'px';
+    part.style.height=8+'px';
+    part.style.background='orange';
+    part.style.borderRadius='50%';
+    part.style.left=Math.random()*100+'%';
+    part.style.top=Math.random()*100+'%';
+    part.style.transition='all 0.8s ease-out';
+    card.appendChild(part);
+    setTimeout(()=>{part.style.transform=`translate(${Math.random()*100-50}px,${Math.random()*100-50}px) scale(0)`;part.style.opacity='0';},50);
+    setTimeout(()=>part.remove(),900);
+  }
+}
+
+function checkEnd(){
+  const remaining=alive.filter(a=>a).length;
+  if(remaining===1){
+    const winnerIndex=alive.findIndex(a=>a);
+    cards[winnerIndex].style.background='green';
+    cards.forEach(card=>{card.classList.add('flipped');});
+    replayBtn.style.display='block';
+  }
+}
+
+function inspectPlayer(card){
+  if(card.classList.contains('inspecting'))return;
+  card.classList.add('inspecting');
+  card.querySelector('.card-inner').classList.add('flipped');
+  cards.forEach(c=>{if(c!==card && alive[c.dataset.index])c.style.filter='grayscale(70%)';});
+}
+
+function uninspectPlayer(card){
+  card.classList.remove('inspecting');
+  card.querySelector('.card-inner').classList.remove('flipped');
+  cards.forEach(c=>{if(alive[c.dataset.index])c.style.filter='none';});
+}
+
+// --- Start / Replay ---
 startBtn.addEventListener('click',()=>{document.getElementById("startMenu").style.display='none';setupGame();});
 howBtn.addEventListener('click',()=>{window.open('howtoplay.html?lang='+currentLang,'_blank')});
 replayBtn.addEventListener('click',()=>{replayBtn.style.display='none';setupGame();});
