@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HOW TO PLAY - DO NOT CHALLENGE</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+<style>
+body {margin:0;font-family:'Press Start 2P',sans-serif;background:#0f2027;color:white;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;height:100vh;}
+h1{text-shadow:0 0 20px #0ff;margin-bottom:20px;}
+p{max-width:800px;text-align:left;line-height:1.5;margin-bottom:10px;font-size:1rem;}
+button{background:#ff9800;color:black;font-weight:bold;border:none;border-radius:12px;box-shadow:0 5px 15px rgba(0,0,0,0.5);padding:10px 15px;margin-top:20px;cursor:pointer;}
+button:hover{background:#ffc107;}
+</style>
+</head>
+<body>
+<h1 id="title"></h1>
+<p id="content"></p>
+<button onclick="window.history.back()" id="backBtn"></button>
+
+<script src="https://cdn.jsdelivr.net/gh/JimmyQrg/do-not-challenge@main/cardInfo-howToPlay.js"></script>
+<script>
+// --- Language from query ---
+const urlParams = new URLSearchParams(window.location.search);
+let lang = urlParams.get('lang')||'en';
+
+// --- Update content ---
+const titles = {en:"HOW TO PLAY", zh:"游戏规则", jp:"遊び方"};
+const btns = {en:"BACK", zh:"返回", jp:"戻る"};
+
+document.getElementById('title').textContent=titles[lang];
+document.getElementById('backBtn').textContent=btns[lang];
+document.getElementById('content').textContent=cardHowToPlay[lang];
+</script>
+</body>
+</html>
