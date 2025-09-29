@@ -9,7 +9,7 @@
 <style>
 body {margin:0; font-family:'Press Start 2P', sans-serif; background:#0f2027; color:white; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; min-height:100vh; padding:20px;}
 h1{font-size:2rem;color:#0ff;text-shadow:0 0 20px #0ff;margin-bottom:20px;}
-#content{max-width:900px;background:rgba(0,0,0,0.85);padding:20px;border-radius:15px;box-shadow:0 5px 30px rgba(0,255,255,0.5);white-space:pre-wrap;line-height:1.5;}
+#content{max-width:900px;background:rgba(0,0,0,0.85);padding:20px;border-radius:15px;box-shadow:0 5px 30px rgba(0,255,255,0.5);white-space:pre-wrap;line-height:1.5; font-size:0.85rem;}
 select{position:fixed;top:20px;right:20px;font-size:1rem;padding:5px;}
 </style>
 </head>
@@ -24,18 +24,28 @@ const contentDiv = document.getElementById("content");
 const languageSelect = document.getElementById("languageSelect");
 let currentLang = 'en';
 
-function updateContent(){
-  contentDiv.textContent = cardHowToPlay[currentLang];
-  document.title = cardHowToPlay[currentLang].split('\n')[0];
-}
+// Populate language selector with proper display
+const languageOptions = [
+  {value:'en', text:'English'},
+  {value:'zh', text:'中文（简体）'},
+  {value:'jp', text:'日本語'}
+];
 
-// Populate language selector
-['en','zh','jp'].forEach(lang=>{
+languageOptions.forEach(optData=>{
   const opt = document.createElement('option');
-  opt.value = lang;
-  opt.textContent = lang.toUpperCase();
+  opt.value = optData.value;
+  opt.textContent = optData.text;
   languageSelect.appendChild(opt);
 });
+
+// Function to update content
+function updateContent(){
+  if(cardHowToPlay && cardHowToPlay[currentLang]){
+    contentDiv.textContent = cardHowToPlay[currentLang];
+  } else {
+    contentDiv.textContent = "No information available in this language.";
+  }
+}
 
 // Language switch
 languageSelect.addEventListener('change',()=>{
@@ -44,6 +54,7 @@ languageSelect.addEventListener('change',()=>{
 });
 
 // Initialize
+languageSelect.value = currentLang;
 updateContent();
 </script>
 </body>
