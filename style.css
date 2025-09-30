@@ -1,0 +1,139 @@
+/* GENERAL STYLES */
+body {
+  margin: 0;
+  font-family: 'Josefin Sans', sans-serif;
+  background: url('background.png') no-repeat center center fixed;
+  background-size: cover;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+#gameWrapper {
+  text-align: center;
+  width: 95%;
+  max-width: 1200px;
+}
+
+h1 {
+  font-size: 3em;
+  margin-bottom: 5px;
+  text-shadow: 0 0 15px #00ffff, 0 0 30px #ff00ff;
+}
+
+#top-instruction {
+  font-size: 1.3em;
+  margin-bottom: 20px;
+  text-shadow: 0 0 8px #00ffff, 0 0 20px #ff00ff;
+}
+
+/* CONTROLS */
+#controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 25px;
+}
+
+/* NUMBER INPUT */
+.number-input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(0,0,0,0.5);
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0 0 12px #00ffff;
+}
+.number-input input {
+  width: 60px;
+  font-size: 1.3em;
+  text-align: center;
+  border-radius: 6px;
+  border: none;
+  padding: 5px;
+  margin: 5px 0;
+}
+.number-input button {
+  width: 35px;
+  height: 30px;
+  border: none;
+  border-radius: 6px;
+  margin: 2px;
+  cursor: pointer;
+  background: linear-gradient(45deg, #00ffff, #ff00ff);
+  color: white;
+  font-weight: bold;
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+.number-input button:hover {transform: scale(1.1); box-shadow:0 0 8px #fff;}
+
+/* LANGUAGE DROPDOWN */
+.dropdown {position: relative; display: inline-block; user-select:none;}
+.dropdown-btn {
+  display: flex; align-items:center; gap:6px; padding:8px 12px; border-radius:12px;
+  background: rgba(0,0,0,0.5); border:none; color:white; cursor:pointer;
+  box-shadow:0 0 12px #ff00ff;
+}
+.dropdown-btn:hover {background: rgba(255,255,255,0.2); transform: scale(1.05);}
+.dropdown-content {
+  display: none; position:absolute; top:100%; left:0;
+  background: rgba(0,0,0,0.8); border-radius:12px;
+  min-width:120px; box-shadow:0 0 10px #00ffff; z-index:1000;
+}
+.dropdown-content div {padding:10px; cursor:pointer; color:white; transition:0.3s;}
+.dropdown-content div:hover{background:rgba(255,255,255,0.2);}
+.dropdown.active .dropdown-content{display:block; animation:fadeIn 0.3s ease;}
+@keyframes fadeIn {from {opacity:0; transform:translateY(-10px);} to {opacity:1; transform:translateY(0);}}
+
+/* START BUTTON */
+#startBtn {
+  padding: 12px 30px;
+  border:none;
+  border-radius:20px;
+  font-size:1.5em;
+  font-weight:bold;
+  cursor:pointer;
+  background: linear-gradient(45deg,#ff00ff,#00ffff);
+  color:white;
+  box-shadow:0 0 25px #00ffff,0 0 50px #ff00ff;
+  transition: transform 0.3s, opacity 0.3s;
+}
+#startBtn:disabled {background: gray; cursor:not-allowed; opacity:0.6;}
+#startBtn:not(:disabled):hover {transform: scale(1.1);}
+
+/* PLAYER GRID */
+#playerContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(100px,1fr));
+  grid-gap:15px;
+  justify-items:center;
+  align-items:center;
+}
+
+/* PLAYER CARD */
+.player {width:100px; height:140px; perspective:1000px; cursor:pointer;}
+.card {
+  width:100%; height:100%; position:relative;
+  transform-style: preserve-3d; transition: transform 0.8s;
+}
+.card.flipped {transform:rotateY(180deg);}
+.card-face {
+  position:absolute; width:100%; height:100%;
+  backface-visibility:hidden; border-radius:12px;
+  display:flex; justify-content:center; align-items:center;
+  font-size:1.5em; font-weight:bold; text-align:center;
+  box-shadow:0 0 15px rgba(255,255,255,0.5);
+}
+.card-front {background:linear-gradient(45deg,#00ffff,#ff00ff);}
+.card-back {background:linear-gradient(45deg,#222,#555); transform:rotateY(180deg); padding:10px; font-size:0.9em;}
+
+/* EFFECTS */
+.card-front{animation:pulse1 2s infinite alternate;}
+.card-back{animation:pulse2 2s infinite alternate;}
+@keyframes pulse1{0%{opacity:0.6}50%{opacity:1}100%{opacity:0.6}}
+@keyframes pulse2{0%{opacity:0.8}50%{opacity:1}100%{opacity:0.8}}
+/* ... add more glow/bounce/flicker keyframes for 700+ lines if needed ... */
