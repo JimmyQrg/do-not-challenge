@@ -1,20 +1,21 @@
-let currentLang = 'en';
-const startBtn = document.getElementById('startBtn');
-const playerCountInput = document.getElementById('playerCount');
-const incrementBtn = document.getElementById('increment');
-const decrementBtn = document.getElementById('decrement');
-const container = document.getElementById('playerContainer');
-const topInstruction = document.getElementById('top-instruction');
-const langDropdown = document.getElementById('langDropdown');
-const currentLangText = document.getElementById('currentLangText');
+let currentLang='en';
+const startBtn=document.getElementById('startBtn');
+const playerCountInput=document.getElementById('playerCount');
+const incrementBtn=document.getElementById('increment');
+const decrementBtn=document.getElementById('decrement');
+const container=document.getElementById('playerContainer');
+const topInstruction=document.getElementById('top-instruction');
+const langDropdown=document.getElementById('langDropdown');
+const currentLangText=document.getElementById('currentLangText');
+const playerCountLabel=document.getElementById('playerCountLabel');
 
 function updateStartButton(){
   const count=parseInt(playerCountInput.value,10);
-  startBtn.disabled = !(count>=2);
+  startBtn.disabled=!(count>=2);
 }
 updateStartButton();
-incrementBtn.addEventListener('click',()=>{playerCountInput.value=Math.min(parseInt(playerCountInput.value)+1,20);updateStartButton();});
-decrementBtn.addEventListener('click',()=>{playerCountInput.value=Math.max(parseInt(playerCountInput.value)-1,2);updateStartButton();});
+incrementBtn.addEventListener('click',()=>{playerCountInput.value=Math.min(parseInt(playerCountInput.value)+1,20); updateStartButton();});
+decrementBtn.addEventListener('click',()=>{playerCountInput.value=Math.max(parseInt(playerCountInput.value)-1,2); updateStartButton();});
 playerCountInput.addEventListener('input',updateStartButton);
 
 langDropdown.querySelector('.dropdown-btn').addEventListener('click',()=>{langDropdown.classList.toggle('active');});
@@ -24,6 +25,8 @@ langDropdown.querySelectorAll('.dropdown-content div').forEach(opt=>{
     langDropdown.classList.remove('active');
     currentLangText.textContent=opt.textContent;
     topInstruction.textContent=cardInfo[0][currentLang];
+    startBtn.textContent=currentLang==='en'?'START':currentLang==='zh'?'开始游戏':'ゲーム開始';
+    playerCountLabel.textContent=currentLang==='en'?'Players:':currentLang==='zh'?'玩家数:':'プレイヤー数:';
   });
 });
 document.addEventListener('click',e=>{if(!langDropdown.contains(e.target)){langDropdown.classList.remove('active');}});
@@ -43,7 +46,6 @@ startBtn.addEventListener('click',()=>{
     player.appendChild(card);
     container.appendChild(player);
 
-    // right click to view rule
     let viewing=false;
     player.addEventListener('contextmenu',e=>{
       e.preventDefault();
@@ -57,12 +59,8 @@ startBtn.addEventListener('click',()=>{
         back.textContent='...';
       }
     });
-
-    // left click to kill
     player.addEventListener('click',()=>{
-      if(!viewing){
-        player.style.background='red';
-      }
+      if(!viewing){ player.style.background='red'; }
     });
   }
 });
