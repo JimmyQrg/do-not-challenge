@@ -1,331 +1,336 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DO NOT CHALLENGE</title>
-<link rel="icon" type="image/png" href="icon.png">
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+  <meta charset="UTF-8">
+  <title>Do Not Challenge</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;700&display=swap');
 
-body {
-  margin:0;
-  overflow:hidden;
-  font-family:'Press Start 2P', cursive;
-  background: url('background.png') no-repeat center center fixed;
-  background-size: cover;
-  color:#fff;
-}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Josefin Sans', sans-serif;
+    }
 
-/* UI containers */
-#startUI, #gameUI, #endUI {
-  position:absolute;
-  width:100%;
-  height:100%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:20px;
-  transition:opacity 0.5s ease;
-}
+    body {
+      background: url("background.png") no-repeat center center fixed;
+      background-size: cover;
+      overflow-x: hidden;
+      overflow-y: auto;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      color: white;
+      text-align: center;
+    }
 
-/* Buttons */
-button {
-  font-family:'Press Start 2P', cursive;
-  font-size:16px;
-  padding:12px 20px;
-  background: linear-gradient(45deg,#222,#555);
-  border: 2px solid #0ff;
-  border-radius:10px;
-  color:#fff;
-  cursor:pointer;
-  transition: all 0.3s ease;
-}
-button:hover {
-  background:#0ff;
-  color:#222;
-  transform:scale(1.1);
-  box-shadow:0 0 20px #0ff,0 0 50px #0ff inset;
-}
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      text-shadow: 0 0 20px #00f, 0 0 40px #0ff;
+      animation: textBounce 2s infinite;
+    }
 
-/* Fancy selector */
-select,input[type=number] {
-  font-family:'Press Start 2P', cursive;
-  font-size:16px;
-  padding:8px 12px;
-  border-radius:8px;
-  border:2px solid #0ff;
-  background: linear-gradient(45deg,#111,#333);
-  color:#fff;
-  cursor:pointer;
-  outline:none;
-}
-select:hover,input[type=number]:hover {
-  background:#0ff;
-  color:#222;
-  transform:scale(1.05);
-  box-shadow:0 0 15px #0ff;
-}
+    @keyframes textBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
 
-/* Language selector */
-#languageSelector {
-  position:absolute;
-  top:10px;
-  right:10px;
-  display:flex;
-  align-items:center;
-  gap:8px;
-  z-index:100;
-}
-#languageSelector img { width:32px;height:32px; cursor:pointer; }
+    .controls {
+      margin: 20px;
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      align-items: center;
+    }
 
-/* Player card */
-#playerCard {
-  width:400px; height:200px; perspective:1000px; cursor:pointer;
-  position:relative;
-}
-.card-inner {
-  width:100%; height:100%;
-  transition: transform 0.8s ease;
-  transform-style: preserve-3d;
-  position:relative;
-}
-.card-inner.flipped { transform: rotateY(180deg); animation: glowPulse 1s infinite; }
-.card-front, .card-back {
-  position:absolute; width:100%; height:100%;
-  backface-visibility:hidden;
-  display:flex; align-items:center; justify-content:center;
-  border:3px solid #0ff; border-radius:12px;
-  font-size:16px; text-align:center; padding:20px; box-sizing:border-box;
-  transition: all 0.3s ease;
-}
-.card-front { background:#333;}
-.card-back { background:#111; transform:rotateY(180deg); font-size:18px; }
+    select, button {
+      font-size: 1.2em;
+      padding: 10px 20px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
 
-/* End UI player boxes in matrix/grid */
-#endUI {
-  flex-wrap: wrap;
-  gap:15px;
-  padding:20px;
-  justify-content:center;
-  align-content:flex-start;
-  overflow-y:auto;
-  display:flex;
-}
-.playerBox {
-  width:100px; height:100px; background:#444;
-  display:flex; align-items:center; justify-content:center;
-  font-size:14px; border:2px solid #0ff;
-  cursor:pointer; transition: all 0.3s ease;
-}
-.playerBox.dead { background:red; animation: shake 0.5s; }
-.playerBox.winner { background:green; transform:scale(1.2); }
+    select {
+      background: linear-gradient(135deg, #222, #555);
+      color: #fff;
+      border: 2px solid #0ff;
+      box-shadow: 0 0 10px #0ff;
+    }
 
-/* Card glow effect */
-.card-inner.flipped { box-shadow: 0 0 20px #0ff, 0 0 50px #0ff inset; }
+    select:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px #0ff;
+    }
 
-/* Particle effect */
-.particle {
-  position:absolute;
-  width:6px;height:6px;
-  background:#0ff; border-radius:50%;
-  pointer-events:none;
-  animation: particleMove 1s forwards;
-}
+    button {
+      background: linear-gradient(135deg, #007, #00f);
+      color: white;
+      border: 2px solid #0ff;
+      box-shadow: 0 0 10px #0ff, 0 0 20px #00f;
+    }
 
-/* Extra particle types */
-.particle2 { background:#f0f; width:4px; height:4px; animation: particleMove2 1s forwards; }
-.particle3 { background:#ff0; width:5px; height:5px; animation: particleMove3 1s forwards; }
-.particle4 { background:#0f0; width:3px; height:3px; animation: particleMove4 1s forwards; }
-.particle5 { background:#0ff; width:6px; height:6px; animation: particleMove5 1s forwards; }
+    button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 30px #0ff, 0 0 40px #00f;
+    }
 
-/* Animations */
-@keyframes glowPulse {0%,100%{box-shadow:0 0 20px #0ff,0 0 50px #0ff inset;}50%{box-shadow:0 0 40px #0ff,0 0 80px #0ff inset;}}
-@keyframes shake {0%{transform:translateX(0);}25%{transform:translateX(-5px);}50%{transform:translateX(5px);}75%{transform:translateX(-5px);}100%{transform:translateX(0);}}
-@keyframes particleMove {0%{opacity:1;}100%{opacity:0; transform:translateY(-50px) translateX(20px) scale(0.5);}}
-@keyframes particleMove2 {0%{opacity:1;}100%{opacity:0; transform:translateY(-40px) translateX(-20px) scale(0.5);}}
-@keyframes particleMove3 {0%{opacity:1;}100%{opacity:0; transform:translateY(-60px) translateX(15px) scale(0.5);}}
-@keyframes particleMove4 {0%{opacity:1;}100%{opacity:0; transform:translateY(-50px) translateX(30px) scale(0.5);}}
-@keyframes particleMove5 {0%{opacity:1;}100%{opacity:0; transform:translateY(-45px) translateX(-25px) scale(0.5);}}
-@keyframes buttonPop {0%{transform:scale(0.9);}50%{transform:scale(1.2);}100%{transform:scale(1);}}
-@keyframes floatUp {0%{transform:translateY(0);}50%{transform:translateY(-10px);}100%{transform:translateY(0);}}
-</style>
+    button:disabled {
+      background: #333;
+      color: #999;
+      border: 2px solid #555;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    .game-area {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      padding: 20px;
+    }
+
+    .players-grid {
+      display: grid;
+      gap: 20px;
+      margin-top: 40px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .player-card {
+      width: 100px;
+      height: 140px;
+      perspective: 1000px;
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.4s;
+    }
+
+    .player-card-inner {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      transform-style: preserve-3d;
+      transition: transform 0.8s;
+    }
+
+    .player-card.flip .player-card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .player-card-front, .player-card-back {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      backface-visibility: hidden;
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.5em;
+      text-shadow: 0 0 10px black;
+    }
+
+    .player-card-front {
+      background: rgba(0, 0, 100, 0.8);
+      border: 2px solid #0ff;
+      animation: glowPulse 3s infinite alternate;
+    }
+
+    .player-card-back {
+      background: rgba(100, 0, 0, 0.8);
+      border: 2px solid #f00;
+      color: yellow;
+      transform: rotateY(180deg);
+    }
+
+    @keyframes glowPulse {
+      from { box-shadow: 0 0 10px #0ff; }
+      to { box-shadow: 0 0 30px #0ff; }
+    }
+
+    .death-phase {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .death-phase h2 {
+      margin-bottom: 20px;
+      font-size: 2em;
+      text-shadow: 0 0 15px red;
+    }
+
+    .death-grid {
+      display: grid;
+      gap: 15px;
+      justify-content: center;
+    }
+
+    .death-player {
+      width: 80px;
+      height: 80px;
+      background: rgba(50, 50, 50, 0.9);
+      border: 2px solid #0ff;
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      font-size: 1.5em;
+      color: white;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px #0ff;
+    }
+
+    .death-player:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 25px #0ff;
+    }
+
+    .death-player.dead {
+      background: rgba(200, 0, 0, 0.9);
+      border: 2px solid red;
+      box-shadow: 0 0 20px red;
+    }
+
+    .death-player.winner {
+      background: rgba(0, 200, 0, 0.9);
+      border: 2px solid lime;
+      box-shadow: 0 0 20px lime;
+    }
+
+    /* Extra effects: particles, rainbow borders, sparkles, etc */
+    .sparkle {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: white;
+      opacity: 0.8;
+      animation: sparkleAnim 1s forwards;
+    }
+
+    @keyframes sparkleAnim {
+      from { transform: scale(1) translateY(0); opacity: 1; }
+      to { transform: scale(0) translateY(-30px); opacity: 0; }
+    }
+
+    .rainbow-border {
+      border-image: linear-gradient(45deg, red, orange, yellow, green, cyan, blue, violet) 1;
+      border-width: 3px;
+      border-style: solid;
+    }
+
+    .hover-tilt:hover {
+      transform: rotateY(10deg) rotateX(5deg) scale(1.05);
+    }
+  </style>
 </head>
 <body>
-
-<!-- Language Selector -->
-<div id="languageSelector">
-  <img src="icon.png" alt="Globe">
-  <select id="languageSelect">
-    <option value="en">English</option>
-    <option value="zh">中文（简体）</option>
-    <option value="jp">日本語</option>
-  </select>
-</div>
-
-<!-- Start UI -->
-<div id="startUI">
-  <h1 id="gameTitle">DO NOT CHALLENGE</h1>
-  <label for="playerCount">Players:</label>
-  <input type="number" id="playerCount" min="2" max="20" value="2">
-  <button id="startBtn">START</button>
-  <button id="howToBtn">HOW TO PLAY</button>
-</div>
-
-<!-- Game UI -->
-<div id="gameUI" style="opacity:0; pointer-events:none;">
-  <h2 id="playerLabel">Player 1</h2>
-  <div id="playerCard">
-    <div class="card-inner">
-      <div class="card-front"><span>Click to reveal rule</span></div>
-      <div class="card-back"><span></span></div>
-    </div>
+  <h1>DO NOT CHALLENGE</h1>
+  <div class="controls">
+    <select id="playerCount">
+      <option value="0">Select Players</option>
+      <option value="2">2 Players</option>
+      <option value="3">3 Players</option>
+      <option value="4">4 Players</option>
+      <option value="5">5 Players</option>
+      <option value="6">6 Players</option>
+      <option value="7">7 Players</option>
+      <option value="8">8 Players</option>
+      <option value="9">9 Players</option>
+      <option value="10">10 Players</option>
+      <option value="12">12 Players</option>
+    </select>
+    <select id="languageSelect">
+      <option value="en">English</option>
+      <option value="zh">中文</option>
+      <option value="jp">日本語</option>
+    </select>
+    <button id="startBtn" disabled>START</button>
   </div>
-  <button id="continueBtn" style="display:none;">CONTINUE</button>
-</div>
 
-<!-- End UI -->
-<div id="endUI" style="opacity:0; pointer-events:none;"></div>
+  <div class="game-area" id="gameArea">
+    <div class="players-grid" id="playersGrid"></div>
+  </div>
 
-<script src="cardInfo-howToPlay.js"></script>
-<script>
-let currentLang='en';
-let totalPlayers=2;
-let currentPlayer=0;
-let playerRules=[];
-let playerStates=[];
-let viewingCard=null;
+  <div class="death-phase" id="deathPhase">
+    <h2>CLICK PLAYER TO CONFIRM DEATH</h2>
+    <div class="death-grid" id="deathGrid"></div>
+  </div>
 
-const startUI=document.getElementById('startUI');
-const gameUI=document.getElementById('gameUI');
-const endUI=document.getElementById('endUI');
+  <script src="cardInfo-howToPlay.js"></script>
+  <script>
+    const startBtn = document.getElementById("startBtn");
+    const playerCount = document.getElementById("playerCount");
+    const languageSelect = document.getElementById("languageSelect");
+    const gameArea = document.getElementById("gameArea");
+    const playersGrid = document.getElementById("playersGrid");
+    const deathPhase = document.getElementById("deathPhase");
+    const deathGrid = document.getElementById("deathGrid");
 
-const startBtn=document.getElementById('startBtn');
-const howToBtn=document.getElementById('howToBtn');
-const playerCountInput=document.getElementById('playerCount');
+    let rules = [];
+    let players = [];
 
-const playerLabel=document.getElementById('playerLabel');
-const playerCardInner=document.querySelector('.card-inner');
-const cardBackText=document.querySelector('.card-back span');
-const continueBtn=document.getElementById('continueBtn');
+    // Disable context menu
+    document.addEventListener("contextmenu", e => e.preventDefault());
 
-const languageSelect=document.getElementById('languageSelect');
-
-function shuffle(array){return array.sort(()=>Math.random()-0.5);}
-
-function startGame(){
-  totalPlayers=Number(playerCountInput.value);
-  currentPlayer=0;
-  playerRules=[];
-  playerStates=Array(totalPlayers).fill('alive');
-  const shuffledRules=shuffle([...cardData]);
-  for(let i=0;i<totalPlayers;i++){playerRules.push(shuffledRules[i%shuffledRules.length]);}
-  startUI.style.opacity=0; startUI.style.pointerEvents='none';
-  gameUI.style.opacity=1; gameUI.style.pointerEvents='auto';
-  showPlayer(currentPlayer);
-}
-
-function showPlayer(index){
-  playerLabel.textContent=currentLang==='en'?`Player ${index+1}`:currentLang==='zh'?`${index+1}号玩家`:`プレイヤー${index+1}`;
-  playerCardInner.classList.remove('flipped');
-  cardBackText.textContent='';
-  continueBtn.style.display='none';
-  viewingCard=null;
-}
-
-playerCardInner.addEventListener('click',()=>{
-  if(viewingCard===currentPlayer)return;
-  if(playerCardInner.classList.contains('flipped'))return;
-  playerCardInner.classList.add('flipped');
-  const rule=playerRules[currentPlayer][currentLang];
-  cardBackText.textContent=rule;
-  continueBtn.style.display='inline-block';
-  spawnParticles();
-});
-
-playerCardInner.addEventListener('contextmenu',(e)=>{
-  e.preventDefault();
-  if(viewingCard===currentPlayer){
-    playerCardInner.classList.remove('flipped');
-    cardBackText.textContent='';
-    playerLabel.textContent=currentLang==='en'?`Player ${currentPlayer+1}`:currentLang==='zh'?`${currentPlayer+1}号玩家`:`プレイヤー${currentPlayer+1}`;
-    viewingCard=null;
-    return;
-  }
-  playerCardInner.classList.add('flipped');
-  const rule=playerRules[currentPlayer][currentLang];
-  cardBackText.textContent=rule;
-  playerLabel.textContent=currentLang==='en'?`Viewing Player ${currentPlayer+1}'s Rule`:currentLang==='zh'?`查看 ${currentPlayer+1}号玩家的规则`:`プレイヤー${currentPlayer+1}のルールを表示中`;
-  viewingCard=currentPlayer;
-});
-
-continueBtn.addEventListener('click',()=>{
-  currentPlayer++;
-  if(currentPlayer>=totalPlayers){ endGame(); }else{ showPlayer(currentPlayer); }
-});
-
-function spawnParticles(){
-  const types=['particle','particle2','particle3','particle4','particle5'];
-  for(let i=0;i<15;i++){
-    const p=document.createElement('div');
-    const type=types[Math.floor(Math.random()*types.length)];
-    p.className=type;
-    p.style.left=Math.random()*400+'px';
-    p.style.top=Math.random()*200+'px';
-    document.getElementById('playerCard').appendChild(p);
-    setTimeout(()=>p.remove(),1000);
-  }
-}
-
-function endGame(){
-  gameUI.style.opacity=0; gameUI.style.pointerEvents='none';
-  endUI.style.opacity=1; endUI.style.pointerEvents='auto';
-  endUI.innerHTML=`<h2 id="endTitle">${currentLang==='en'?'CLICK PLAYER TO CONFIRM DEATH':currentLang==='zh'?'点击方块杀死玩家':'プレイヤーをクリックして死亡確認'}</h2>`;
-  for(let i=0;i<totalPlayers;i++){
-    const box=document.createElement('div');
-    box.classList.add('playerBox');
-    box.textContent=i+1;
-    box.addEventListener('click',()=>{
-      if(box.classList.contains('dead'))return;
-      box.classList.add('dead');
-      box.style.transform='scale(1.1)';
-      setTimeout(()=>box.style.transform='scale(1)',100);
-      checkWinner();
+    playerCount.addEventListener("change", () => {
+      startBtn.disabled = playerCount.value < 2;
     });
-    box.addEventListener('contextmenu',(e)=>{
-      e.preventDefault();
-      if(box.classList.contains('flipped')){ box.textContent=i+1; box.classList.remove('flipped'); }
-      else { box.textContent=playerRules[i][currentLang]; box.classList.add('flipped'); }
+
+    startBtn.addEventListener("click", () => {
+      const count = parseInt(playerCount.value);
+      rules = shuffle(Object.values(cardInfo.rules));
+      players = [];
+      playersGrid.innerHTML = "";
+
+      let cols = Math.floor(window.innerWidth / 150);
+      playersGrid.style.gridTemplateColumns = `repeat(${cols}, auto)`;
+
+      for (let i = 0; i < count; i++) {
+        const card = document.createElement("div");
+        card.className = "player-card hover-tilt";
+        card.innerHTML = `
+          <div class="player-card-inner">
+            <div class="player-card-front">P${i+1}</div>
+            <div class="player-card-back">${rules[i % rules.length]}</div>
+          </div>
+        `;
+        card.addEventListener("contextmenu", (e) => {
+          e.preventDefault();
+          card.classList.toggle("flip");
+          makeSparkle(e.pageX, e.pageY);
+        });
+        playersGrid.appendChild(card);
+        players.push(card);
+      }
+
+      gameArea.style.display = "flex";
     });
-    endUI.appendChild(box);
-  }
-}
 
-function checkWinner(){
-  const alive=Array.from(document.querySelectorAll('.playerBox')).filter(b=>!b.classList.contains('dead'));
-  if(alive.length===1){
-    const winnerBox=alive[0];
-    winnerBox.classList.add('winner');
-    const boxes=document.querySelectorAll('.playerBox');
-    boxes.forEach((b,i)=>{ b.textContent=playerRules[i][currentLang]; });
-    const replayBtn=document.createElement('button');
-    replayBtn.textContent=currentLang==='en'?'REPLAY':currentLang==='zh'?'再玩一局':'リプレイ';
-    replayBtn.addEventListener('click',()=>location.reload());
-    endUI.appendChild(replayBtn);
-    spawnParticles();
-  }
-}
+    function shuffle(arr) {
+      return arr.sort(() => Math.random() - 0.5);
+    }
 
-languageSelect.addEventListener('change',(e)=>{
-  currentLang=e.target.value;
-  startBtn.textContent=currentLang==='en'?'START':currentLang==='zh'?'开始':'スタート';
-  howToBtn.textContent=currentLang==='en'?'HOW TO PLAY':currentLang==='zh'?'游戏规则':'遊び方';
-  if(currentPlayer<totalPlayers) showPlayer(currentPlayer);
-});
-
-startBtn.addEventListener('click',startGame);
-howToBtn.addEventListener('click',()=>{ window.open('howtoplay.html','_blank')||alert('Please view howtoplay.html for instructions.'); });
-</script>
+    function makeSparkle(x, y) {
+      for (let i = 0; i < 6; i++) {
+        const sp = document.createElement("div");
+        sp.className = "sparkle";
+        sp.style.left = (x + Math.random()*20 - 10) + "px";
+        sp.style.top = (y + Math.random()*20 - 10) + "px";
+        document.body.appendChild(sp);
+        setTimeout(() => sp.remove(), 1000);
+      }
+    }
+  </script>
 </body>
 </html>
