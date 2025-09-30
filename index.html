@@ -11,9 +11,12 @@
   <div id="top-instruction"></div>
   <div id="controls">
     <div class="number-input">
-      <button id="increment">▲</button>
-      <input type="number" id="playerCount" value="2" min="2" max="20">
-      <button id="decrement">▼</button>
+      <label id="playerCountLabel">Players:</label>
+      <div>
+        <button id="increment">▲</button>
+        <input type="number" id="playerCount" value="2" min="2" max="20">
+        <button id="decrement">▼</button>
+      </div>
     </div>
     <div class="dropdown" id="langDropdown">
       <button class="dropdown-btn"><img src="globe.png" width="24" height="24"> <span id="currentLangText">Language</span></button>
@@ -23,11 +26,10 @@
         <div data-lang="jp">日本語</div>
       </div>
     </div>
-    <button id="startBtn" disabled>PRESS START 2P</button>
+    <button id="startBtn" disabled>START</button>
   </div>
   <div id="playerContainer"></div>
 </div>
-
 <script src="cardInfo-howToPlay.js"></script>
 <script src="game.js"></script>
 </body>
